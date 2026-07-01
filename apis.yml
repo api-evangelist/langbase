@@ -1,0 +1,213 @@
+aid: langbase
+url: https://raw.githubusercontent.com/api-evangelist/langbase/refs/heads/main/apis.yml
+name: Langbase
+kind: company
+description: Langbase is a serverless AI developer platform for building, deploying,
+  and scaling AI agents and applications. Its composable primitives - Pipes (agents),
+  Memory (managed RAG), Threads, Agent (one API over 100+ LLMs), Tools, Parser,
+  Chunker, and Embed - are exposed through a single Bearer-authenticated REST API
+  at api.langbase.com, with Server-Sent Events (SSE) streaming for generative
+  endpoints.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- AI
+- Agents
+- RAG
+- LLM
+- Serverless
+created: '2026-07-01'
+modified: '2026-07-01'
+specificationVersion: '0.19'
+apis:
+- aid: langbase:langbase-pipes-api
+  name: Langbase Pipes API
+  tags:
+  - Pipes
+  - Agents
+  - Completions
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://langbase.com/docs/api-reference/pipe
+  baseURL: https://api.langbase.com/v1
+  properties:
+  - url: https://langbase.com/docs/pipe
+    type: Documentation
+  - url: https://langbase.com/docs/api-reference/pipe
+    type: APIReference
+  - url: openapi/langbase-openapi.yml
+    type: OpenAPI
+  description: Run, create, update, and list Pipes - composable, deployable AI agents
+    with a system prompt, model, tools, variables, and memory. POST /v1/pipes/run
+    executes a Pipe over a message array and streams token deltas as Server-Sent
+    Events when stream is true.
+- aid: langbase:langbase-agent-api
+  name: Langbase Agent API
+  tags:
+  - Agent
+  - LLM
+  - Multi-Provider
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://langbase.com/docs/api-reference/agent
+  baseURL: https://api.langbase.com/v1
+  properties:
+  - url: https://langbase.com/docs/agent
+    type: Documentation
+  - url: https://langbase.com/docs/api-reference/agent
+    type: APIReference
+  - url: openapi/langbase-openapi.yml
+    type: OpenAPI
+  description: A single liquid AI mesh endpoint (POST /v1/agent/run) that runs a
+    prompt against 100+ LLMs from all top providers using a provider:model_id
+    string, with tools, generation controls, and SSE streaming. Bring-your-own LLM
+    keys are supported via the LB-LLM-Key header.
+- aid: langbase:langbase-memory-api
+  name: Langbase Memory API
+  tags:
+  - Memory
+  - RAG
+  - Vector Store
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://langbase.com/docs/api-reference/memory
+  baseURL: https://api.langbase.com/v1
+  properties:
+  - url: https://langbase.com/docs/memory
+    type: Documentation
+  - url: https://langbase.com/docs/api-reference/memory
+    type: APIReference
+  - url: openapi/langbase-openapi.yml
+    type: OpenAPI
+  description: Managed, serverless RAG. Create and list memory stores, upload and
+    manage documents, and retrieve semantically similar chunks (POST
+    /v1/memory/retrieve) with a topK control and metadata filters, without running
+    your own vector database or embedding pipeline.
+- aid: langbase:langbase-threads-api
+  name: Langbase Threads API
+  tags:
+  - Threads
+  - Conversation
+  - State
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://langbase.com/docs/api-reference/threads
+  baseURL: https://api.langbase.com/v1
+  properties:
+  - url: https://langbase.com/docs/threads
+    type: Documentation
+  - url: https://langbase.com/docs/api-reference/threads
+    type: APIReference
+  - url: openapi/langbase-openapi.yml
+    type: OpenAPI
+  description: Persist and manage conversation state. Create, get, update, and
+    delete threads, and append or list messages, so multi-turn agent conversations
+    keep their history server-side and can be resumed via a thread identifier.
+- aid: langbase:langbase-tools-api
+  name: Langbase Tools API
+  tags:
+  - Tools
+  - Web Search
+  - Crawl
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://langbase.com/docs/api-reference/tools
+  baseURL: https://api.langbase.com/v1
+  properties:
+  - url: https://langbase.com/docs/tools
+    type: Documentation
+  - url: https://langbase.com/docs/api-reference/tools
+    type: APIReference
+  - url: openapi/langbase-openapi.yml
+    type: OpenAPI
+  description: Managed agent tools. POST /v1/tools/web-search runs a live web search
+    (via providers such as Exa) returning URLs and extracted content, and POST
+    /v1/tools/crawl fetches and extracts content from one or more web pages for
+    agents to ground on.
+- aid: langbase:langbase-parser-api
+  name: Langbase Parser API
+  tags:
+  - Parser
+  - Documents
+  - Extraction
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://langbase.com/docs/api-reference/parser
+  baseURL: https://api.langbase.com/v1
+  properties:
+  - url: https://langbase.com/docs/parser
+    type: Documentation
+  - url: https://langbase.com/docs/api-reference/parser
+    type: APIReference
+  - url: openapi/langbase-openapi.yml
+    type: OpenAPI
+  description: Extract clean text from uploaded documents (PDF, CSV, XLSX, XLS, and
+    more, up to 10 MB) via a multipart POST /v1/parser, as the ingestion front door
+    for RAG and content pipelines.
+- aid: langbase:langbase-chunker-api
+  name: Langbase Chunker API
+  tags:
+  - Chunker
+  - RAG
+  - Preprocessing
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://langbase.com/docs/api-reference/chunker
+  baseURL: https://api.langbase.com/v1
+  properties:
+  - url: https://langbase.com/docs/chunker
+    type: Documentation
+  - url: https://langbase.com/docs/api-reference/chunker
+    type: APIReference
+  - url: openapi/langbase-openapi.yml
+    type: OpenAPI
+  description: Split large text into overlapping, retrieval-ready chunks (POST
+    /v1/chunker) with configurable chunkMaxLength and chunkOverlap, for building
+    RAG and search indexes.
+- aid: langbase:langbase-embed-api
+  name: Langbase Embed API
+  tags:
+  - Embeddings
+  - Vectors
+  - RAG
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://langbase.com/docs/api-reference/embed
+  baseURL: https://api.langbase.com/v1
+  properties:
+  - url: https://langbase.com/docs/embed
+    type: Documentation
+  - url: https://langbase.com/docs/api-reference/embed
+    type: APIReference
+  - url: openapi/langbase-openapi.yml
+    type: OpenAPI
+  description: Generate embedding vectors for up to 100 text chunks per request (POST
+    /v1/embed) using OpenAI, Cohere, or Google embedding models, defaulting to
+    openai:text-embedding-3-large.
+- aid: langbase:langbase-workflows-api
+  name: Langbase Workflows API
+  tags:
+  - Workflows
+  - Orchestration
+  - Agents
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://langbase.com/docs/workflows
+  baseURL: https://api.langbase.com/v1
+  properties:
+  - url: https://langbase.com/docs/workflows
+    type: Documentation
+  - url: openapi/langbase-openapi.yml
+    type: OpenAPI
+  description: Durable, step-based orchestration for composing agents, memory, and
+    tools into multi-step AI workflows with retries and timeouts. Workflows compose
+    the underlying Agent, Pipes, Memory, and Tools API calls into a single reliable
+    execution.
+common:
+- type: GitHubOrganization
+  url: https://github.com/LangbaseInc
+- type: LinkedIn
+  url: https://www.linkedin.com/company/langbase
+- type: Website
+  url: https://langbase.com/
+- type: Documentation
+  url: https://langbase.com/docs
+- type: Plans
+  url: plans/langbase-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/langbase-rate-limits.yml
+- type: FinOps
+  url: finops/langbase-finops.yml
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

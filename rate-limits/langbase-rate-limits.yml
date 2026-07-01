@@ -1,0 +1,73 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Langbase
+providerId: langbase
+created: '2026-07-01'
+modified: '2026-07-01'
+reconciled: false
+tags:
+- AI
+- Agents
+- RAG
+- LLM
+- Serverless
+- Rate Limiting
+- Quotas
+- Throttling
+description: >-
+  Langbase enforces per-account rate limits that scale with subscription tier
+  (Free, Pro, Enterprise). Limits are applied per API key across the platform
+  primitives - Pipe / Agent runs, Memory retrieval and document uploads, Parser,
+  Chunker, Embed, and Tools - and are commonly expressed as requests per minute.
+  Generative endpoints stream via Server-Sent Events; exceeding limits returns
+  HTTP 429. Specific per-endpoint numeric limits are not reconciled in this
+  artifact.
+notes: >-
+  Verify current per-tier and per-endpoint limits in the Langbase docs
+  (Limits section) on reconciliation; limits change as accounts move between
+  Free, Pro, and Enterprise tiers.
+sources:
+- https://langbase.com/docs/api-reference/limits
+- https://langbase.com/pricing
+responseCodes:
+  throttled: 429
+limits:
+- name: Requests Per Minute (RPM)
+  scope: account
+  metric: requests
+  limit: see provider documentation
+  notes: Per-API-key RPM, varies by tier and endpoint.
+- name: Agent / Pipe Runs
+  scope: account
+  metric: runs
+  limit: see provider documentation
+  notes: Run throughput scales with Free / Pro / Enterprise tier.
+- name: Memory Retrieval
+  scope: account
+  metric: requests
+  limit: see provider documentation
+  notes: Retrieval (RAG) request rate; topK max 100 per request.
+- name: Document Upload / Parser
+  scope: account
+  metric: requests
+  limit: see provider documentation
+  notes: Parser accepts documents up to 10 MB; upload rate varies by tier.
+- name: Embed
+  scope: account
+  metric: chunks
+  limit: 100 chunks per request
+  notes: Maximum 100 chunks per embed request, each up to 8192 characters.
+- name: Tools (Web Search / Crawl)
+  scope: account
+  metric: requests
+  limit: see provider documentation
+  notes: Tool call rate varies by tier.
+policies:
+- name: Tiered Limits
+  description: Limits raise as accounts move from Free to Pro to Enterprise agreements.
+- name: Backoff Strategy
+  description: Clients should implement exponential backoff with jitter and honor Retry-After on 429 responses.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

@@ -1,0 +1,190 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Langbase
+providerId: langbase
+created: '2026-07-01'
+modified: '2026-07-01'
+reconciled: false
+tags:
+- AI
+- Agents
+- RAG
+- LLM
+- Serverless
+- Plans
+description: >-
+  Langbase combines subscription tiers - Free (Hobby), Pro, and Enterprise -
+  with usage-based metering on top. Platform primitives (Pipe/Agent runs,
+  Memory storage and retrieval, Parser, Chunker, Embed, Tools) are metered by
+  runs, tokens, stored documents, and tool calls. When you bring your own LLM
+  provider key (via the LB-LLM-Key header), the underlying model tokens are
+  billed by that provider rather than by Langbase.
+notes: >-
+  Representative tiering as published on the Langbase pricing page; tier limits,
+  included usage, and per-unit rates change - verify against
+  https://langbase.com/pricing on reconciliation.
+sources:
+- https://langbase.com/pricing
+- https://langbase.com/docs
+plans:
+- id: langbase-free
+  name: Free (Hobby)
+  type: free
+  description: >-
+    No-cost tier to build and ship AI agents with included monthly runs and
+    memory, intended for prototyping and small projects.
+  entries:
+  - label: Included Agent / Pipe Runs
+    name: free_runs
+    type: quota
+    metric: runs
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: included (see pricing page for monthly allotment)
+    userMultiplied: false
+  - label: Included Memory Storage
+    name: free_memory
+    type: quota
+    metric: documents
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: included (limited stores and documents)
+    userMultiplied: false
+  elements:
+  - name: Pipes
+  - name: Agent
+  - name: Memory
+  - name: Threads
+  - name: Tools
+  - name: Parser
+  - name: Chunker
+  - name: Embed
+- id: langbase-pro
+  name: Pro
+  type: subscription
+  description: >-
+    Paid monthly subscription with higher included usage, more memory stores
+    and documents, higher rate limits, and pay-as-you-go overage.
+  entries:
+  - label: Monthly Subscription
+    name: pro_subscription
+    type: flat
+    metric: subscription
+    limit: 1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: see Langbase pricing page
+    userMultiplied: false
+  - label: Overage Runs
+    name: pro_overage_runs
+    type: usage
+    metric: runs
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: pay-as-you-go per run beyond included allotment
+    userMultiplied: false
+  elements:
+  - name: Pipes
+  - name: Agent
+  - name: Memory
+  - name: Threads
+  - name: Tools
+  - name: Parser
+  - name: Chunker
+  - name: Embed
+  - name: Workflows
+- id: langbase-usage
+  name: Usage-Based Metering
+  type: usage
+  description: >-
+    Metered usage applied on top of any subscription tier across the platform
+    primitives.
+  entries:
+  - label: Agent / Pipe Runs
+    name: runs
+    type: usage
+    metric: runs
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: metered per run
+    userMultiplied: false
+  - label: Memory Retrieval
+    name: memory_retrieval
+    type: usage
+    metric: requests
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: metered per retrieval request
+    userMultiplied: false
+  - label: Memory Storage
+    name: memory_storage
+    type: usage
+    metric: documents
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: metered per stored document / embedding volume
+    userMultiplied: false
+  - label: Embeddings
+    name: embeddings
+    type: usage
+    metric: tokens
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1000000
+    price: metered per embedding model (openai / cohere / google)
+    userMultiplied: false
+  - label: Tools (Web Search / Crawl)
+    name: tools
+    type: usage
+    metric: requests
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: metered per tool call
+    userMultiplied: false
+  elements:
+  - name: Runs
+  - name: Memory
+  - name: Embeddings
+  - name: Tools
+- id: langbase-enterprise
+  name: Enterprise
+  type: enterprise
+  description: >-
+    Volume commitments, SSO/SAML, dedicated support, higher rate limits,
+    security reviews, and negotiated terms. Contact Langbase sales.
+  entries:
+  - label: Enterprise Agreement
+    name: enterprise
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: Custom Volume Pricing
+  - name: SSO / SAML
+  - name: Dedicated Support
+  - name: Security Review
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

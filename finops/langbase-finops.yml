@@ -1,0 +1,129 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: Langbase
+providerId: langbase
+created: '2026-07-01'
+modified: '2026-07-01'
+reconciled: false
+tags:
+- AI
+- Agents
+- RAG
+- LLM
+- Serverless
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of Langbase spend. Langbase blends subscription tiers (Free, Pro,
+  Enterprise) with usage-based metering across its primitives: Pipe / Agent
+  runs, Memory storage and retrieval, Parser document parsing, Chunker, Embed
+  (per embedding model), and Tools (web search / crawl). When customers bring
+  their own LLM provider key via the LB-LLM-Key header, the underlying model
+  token spend is billed by the downstream provider (OpenAI, Anthropic, Google,
+  and others) rather than by Langbase, splitting cost across two invoices.
+notes: >-
+  Per-unit rates and included allotments are subject to change; verify against
+  the Langbase pricing page during reconciliation.
+sources:
+- https://langbase.com/pricing
+- https://langbase.com/docs
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Langbase
+serviceCategory: AI and Machine Learning
+billingModel:
+  pricingCategory: Usage-Based
+  billingFrequency: Monthly
+  billingCurrency: USD
+  chargeCategories:
+  - Usage
+  - Purchase
+  - Adjustment
+focusColumns:
+  ServiceName: Langbase
+  ServiceCategory: AI and Machine Learning
+  ProviderName: Langbase
+  PublisherName: Langbase
+  InvoiceIssuerName: Langbase
+  BillingCurrency: USD
+  ChargeCategory: Usage
+  PricingCategory: Usage-Based
+meters:
+- name: agent_pipe_runs
+  description: Executions of Pipes and Agent runs, metered per run.
+  unit: runs
+  aggregation: sum
+  dimensions:
+  - account
+  - pipe
+  - model
+- name: memory_retrievals
+  description: Memory retrieval (RAG) requests, metered per request.
+  unit: requests
+  aggregation: sum
+  dimensions:
+  - account
+  - memory
+- name: memory_storage
+  description: Documents stored and embedded in memory stores.
+  unit: documents
+  aggregation: sum
+  dimensions:
+  - account
+  - memory
+- name: embedding_tokens
+  description: Tokens embedded via the Embed API, per embedding model.
+  unit: tokens
+  aggregation: sum
+  dimensions:
+  - account
+  - model
+- name: parser_documents
+  description: Documents parsed via the Parser API (up to 10 MB each).
+  unit: documents
+  aggregation: sum
+  dimensions:
+  - account
+- name: tool_invocations
+  description: Tool calls (web search, crawl) metered per invocation.
+  unit: invocations
+  aggregation: sum
+  dimensions:
+  - account
+  - tool
+- name: subscription
+  description: Monthly Pro subscription fee, or Enterprise agreement.
+  unit: months
+  aggregation: sum
+  dimensions:
+  - account
+  - tier
+- name: byok_llm_tokens
+  description: >-
+    Underlying LLM tokens billed by the downstream provider when using
+    bring-your-own-key (LB-LLM-Key). Not billed by Langbase.
+  unit: tokens
+  aggregation: sum
+  dimensions:
+  - account
+  - provider
+  - model
+principles:
+- name: Visibility
+  description: Track Langbase run, retrieval, and tool usage per API key; separately track downstream LLM token spend when using bring-your-own-key.
+- name: Allocation
+  description: Scope API keys per Pipe / workload / team and map to internal cost centers.
+- name: Optimization
+  description: Right-size models via the provider:model_id string; tune topK and chunk sizes to cut embedding and retrieval cost; cache and reuse memory; batch embed up to 100 chunks per request.
+- name: Accountability
+  description: Assign owners per Pipe / project; review run, retrieval, and BYOK token spend monthly against budget.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

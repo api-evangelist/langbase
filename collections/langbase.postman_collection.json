@@ -1,0 +1,490 @@
+{
+  "info": {
+    "name": "Langbase API",
+    "description": "Representative Postman collection for the Langbase serverless AI developer platform. Base URL https://api.langbase.com, Bearer API key auth. Generative run endpoints stream Server-Sent Events when stream is true.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.langbase.com",
+      "type": "string"
+    },
+    {
+      "key": "bearerToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Pipes",
+      "item": [
+        {
+          "name": "Run a Pipe",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/pipes/run",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "pipes", "run"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"messages\": [{ \"role\": \"user\", \"content\": \"Hello\" }],\n  \"stream\": false\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Executes a Pipe over a message array. Streams Server-Sent Events when stream is true. Response carries an lb-thread-id header."
+          }
+        },
+        {
+          "name": "List Pipes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/pipes",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "pipes"]
+            },
+            "description": "List Pipes."
+          }
+        },
+        {
+          "name": "Create a Pipe",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/pipes",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "pipes"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"my-pipe\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Create a new Pipe by sending the Pipe configuration in the request body."
+          }
+        },
+        {
+          "name": "Update a Pipe",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/pipes/:name",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "pipes", ":name"],
+              "variable": [{ "key": "name", "value": "" }]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Update an existing Pipe."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Agent",
+      "item": [
+        {
+          "name": "Run an agent against any of 100+ LLMs",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "LB-LLM-Key", "value": "", "description": "Optional bring-your-own LLM provider key." }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/agent/run",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "agent", "run"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"model\": \"openai:gpt-4o-mini\",\n  \"input\": \"Hello\",\n  \"stream\": false\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Runs a prompt against a provider:model_id. Streams Server-Sent Events when stream is true."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Memory",
+      "item": [
+        {
+          "name": "List memory stores",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/memory",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "memory"]
+            },
+            "description": "List memory stores."
+          }
+        },
+        {
+          "name": "Create a memory store",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/memory",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "memory"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"my-memory\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Create a memory store."
+          }
+        },
+        {
+          "name": "Retrieve similar chunks (RAG)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/memory/retrieve",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "memory", "retrieve"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"What is Langbase?\",\n  \"memory\": [{ \"name\": \"my-memory\" }],\n  \"topK\": 20\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Retrieve semantically similar chunks from one or more memory stores."
+          }
+        },
+        {
+          "name": "Delete a memory store",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/memory/:name",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "memory", ":name"],
+              "variable": [{ "key": "name", "value": "" }]
+            },
+            "description": "Delete a memory store."
+          }
+        },
+        {
+          "name": "List documents in a memory store",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/memory/:name/documents",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "memory", ":name", "documents"],
+              "variable": [{ "key": "name", "value": "" }]
+            },
+            "description": "List documents in a memory store."
+          }
+        },
+        {
+          "name": "Upload a document to a memory store",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/memory/:name/documents",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "memory", ":name", "documents"],
+              "variable": [{ "key": "name", "value": "" }]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "documentName", "value": "", "type": "text" },
+                { "key": "document", "type": "file", "src": [] }
+              ]
+            },
+            "description": "Upload a document to a memory store."
+          }
+        },
+        {
+          "name": "Delete a document from a memory store",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/memory/:name/documents/:documentName",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "memory", ":name", "documents", ":documentName"],
+              "variable": [
+                { "key": "name", "value": "" },
+                { "key": "documentName", "value": "" }
+              ]
+            },
+            "description": "Delete a document from a memory store."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Threads",
+      "item": [
+        {
+          "name": "Create a conversation thread",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/threads",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "threads"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Create a conversation thread."
+          }
+        },
+        {
+          "name": "Get a thread",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/threads/:threadId",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "threads", ":threadId"],
+              "variable": [{ "key": "threadId", "value": "" }]
+            },
+            "description": "Get a thread."
+          }
+        },
+        {
+          "name": "Update a thread",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/threads/:threadId",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "threads", ":threadId"],
+              "variable": [{ "key": "threadId", "value": "" }]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Update a thread."
+          }
+        },
+        {
+          "name": "Delete a thread",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/threads/:threadId",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "threads", ":threadId"],
+              "variable": [{ "key": "threadId", "value": "" }]
+            },
+            "description": "Delete a thread."
+          }
+        },
+        {
+          "name": "List messages in a thread",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/threads/:threadId/messages",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "threads", ":threadId", "messages"],
+              "variable": [{ "key": "threadId", "value": "" }]
+            },
+            "description": "List messages in a thread."
+          }
+        },
+        {
+          "name": "Append messages to a thread",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/threads/:threadId/messages",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "threads", ":threadId", "messages"],
+              "variable": [{ "key": "threadId", "value": "" }]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "[]",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Append messages to a thread."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tools",
+      "item": [
+        {
+          "name": "Run a live web search",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/tools/web-search",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "tools", "web-search"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"Langbase\",\n  \"service\": \"exa\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Run a live web search, returning URLs and extracted content."
+          }
+        },
+        {
+          "name": "Crawl and extract content from web pages",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/tools/crawl",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "tools", "crawl"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"url\": [\"https://langbase.com\"],\n  \"service\": \"spider\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Crawl and extract content from one or more web pages."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Parser",
+      "item": [
+        {
+          "name": "Parse a document into clean text",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/parser",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "parser"]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "document", "type": "file", "src": [] },
+                { "key": "documentName", "value": "", "type": "text" },
+                { "key": "contentType", "value": "", "type": "text" }
+              ]
+            },
+            "description": "Extract clean text from an uploaded document (PDF, CSV, XLSX, XLS, and more, up to 10 MB)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Chunker",
+      "item": [
+        {
+          "name": "Split text into overlapping chunks",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/chunker",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "chunker"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"...\",\n  \"chunkMaxLength\": 1024,\n  \"chunkOverlap\": 256\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Split large text into overlapping, retrieval-ready chunks."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Embed",
+      "item": [
+        {
+          "name": "Generate embedding vectors",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/embed",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "embed"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"chunks\": [\"text to embed\"],\n  \"embeddingModel\": \"openai:text-embedding-3-large\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Generate embedding vectors for up to 100 chunks per request."
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+aid: langbase
+name: Langbase
+review:
+  question: Does Langbase expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-01'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    Langbase streams generative output over HTTP Server-Sent Events (SSE),
+    not WebSocket. Under the updated API Evangelist scope (2026-05-29), SSE is
+    in-scope for AsyncAPI modeling; an AsyncAPI document was not authored in
+    this initial catalog pass but the SSE transport is documented explicitly in
+    apis.yml and the OpenAPI (text/event-stream responses on /v1/pipes/run and
+    /v1/agent/run). No WebSocket surface was modeled because none is documented.
+findings:
+  summary: |
+    Langbase does not publish a documented public WebSocket API. The platform
+    exposes only REST (HTTPS) endpoints under https://api.langbase.com/v1,
+    authenticated with a Bearer API key. Streaming for generative endpoints
+    (Pipe run and Agent run) is delivered as HTTP Server-Sent Events (SSE)
+    via the `stream: true` parameter; SSE is a one-way HTTP streaming transport
+    and is not WebSocket. No realtime, bidirectional, or audio-streaming
+    WebSocket (ws:// or wss://) endpoint is documented for any surface.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.langbase.com/v1
+      documented: true
+    - protocol: SSE
+      scheme: https
+      note: Server-Sent Events delivered over the same REST run endpoints when stream=true. Not WebSocket.
+      documented: true
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented in Langbase's API reference for pipes, agent, memory, threads, tools, parser, chunker, or embed as of the review date.
+  endpointsConfirmedRest:
+    - POST https://api.langbase.com/v1/pipes/run
+    - GET  https://api.langbase.com/v1/pipes
+    - POST https://api.langbase.com/v1/pipes
+    - POST https://api.langbase.com/v1/pipes/{name}
+    - POST https://api.langbase.com/v1/agent/run
+    - GET  https://api.langbase.com/v1/memory
+    - POST https://api.langbase.com/v1/memory
+    - DELETE https://api.langbase.com/v1/memory/{name}
+    - POST https://api.langbase.com/v1/memory/retrieve
+    - GET  https://api.langbase.com/v1/memory/{name}/documents
+    - POST https://api.langbase.com/v1/memory/{name}/documents
+    - DELETE https://api.langbase.com/v1/memory/{name}/documents/{documentName}
+    - POST https://api.langbase.com/v1/threads
+    - GET  https://api.langbase.com/v1/threads/{threadId}
+    - PATCH https://api.langbase.com/v1/threads/{threadId}
+    - DELETE https://api.langbase.com/v1/threads/{threadId}
+    - GET  https://api.langbase.com/v1/threads/{threadId}/messages
+    - POST https://api.langbase.com/v1/threads/{threadId}/messages
+    - POST https://api.langbase.com/v1/tools/web-search
+    - POST https://api.langbase.com/v1/tools/crawl
+    - POST https://api.langbase.com/v1/parser
+    - POST https://api.langbase.com/v1/chunker
+    - POST https://api.langbase.com/v1/embed
+sources:
+  - url: https://langbase.com/docs
+    type: Documentation
+    note: Overview describes REST APIs at api.langbase.com with Bearer auth; no WebSocket mentioned.
+  - url: https://langbase.com/docs/api-reference
+    type: APIReference
+    note: All documented endpoints are HTTPS REST across Pipe, Agent, Memory, Threads, Tools, Parser, Chunker, and Embed.
+  - url: https://langbase.com/docs/api-reference/pipe/run
+    type: Documentation
+    note: Pipe run streaming uses stream=true delivering Server-Sent Events over HTTPS, not WebSocket; response carries an lb-thread-id header.
+  - url: https://langbase.com/docs/api-reference/agent
+    type: Documentation
+    note: Agent run streams StreamChunk objects over SSE when stream is true.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket protocol surface exists. Streaming is HTTP SSE, which is
+    documented explicitly in apis.yml descriptions and represented in the
+    OpenAPI as text/event-stream responses on /v1/pipes/run and /v1/agent/run,
+    so SSE is never misrepresented as WebSocket. An AsyncAPI document was not
+    authored in this initial pass.

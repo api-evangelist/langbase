@@ -1,0 +1,469 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Langbase API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Pipes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Run a Pipe.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/pipes/run",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"messages\": [{ \"role\": \"user\", \"content\": \"Hello\" }],\n  \"stream\": false\n}"
+            }
+          },
+          "docs": "Executes a Pipe over a message array. Streams Server-Sent Events when stream is true."
+        },
+        {
+          "info": {
+            "name": "List Pipes.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.langbase.com/v1/pipes"
+          },
+          "docs": "List Pipes."
+        },
+        {
+          "info": {
+            "name": "Create a Pipe.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/pipes",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"name\": \"my-pipe\"\n}"
+            }
+          },
+          "docs": "Create a new Pipe by sending the Pipe configuration in the request body."
+        },
+        {
+          "info": {
+            "name": "Update a Pipe.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/pipes/:name",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "The name of the Pipe to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update an existing Pipe."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Agent",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Run an agent against any of 100+ LLMs.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/agent/run",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"model\": \"openai:gpt-4o-mini\",\n  \"input\": \"Hello\",\n  \"stream\": false\n}"
+            }
+          },
+          "docs": "Runs a prompt against a provider:model_id. Streams Server-Sent Events when stream is true. Supports LB-LLM-Key for bring-your-own-key."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Memory",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List memory stores.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.langbase.com/v1/memory"
+          },
+          "docs": "List memory stores."
+        },
+        {
+          "info": {
+            "name": "Create a memory store.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/memory",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"name\": \"my-memory\"\n}"
+            }
+          },
+          "docs": "Create a memory store."
+        },
+        {
+          "info": {
+            "name": "Retrieve similar chunks (RAG).",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/memory/retrieve",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"query\": \"What is Langbase?\",\n  \"memory\": [{ \"name\": \"my-memory\" }],\n  \"topK\": 20\n}"
+            }
+          },
+          "docs": "Retrieve semantically similar chunks from one or more memory stores."
+        },
+        {
+          "info": {
+            "name": "Delete a memory store.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.langbase.com/v1/memory/:name",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a memory store."
+        },
+        {
+          "info": {
+            "name": "List documents in a memory store.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.langbase.com/v1/memory/:name/documents",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List documents in a memory store."
+        },
+        {
+          "info": {
+            "name": "Upload a document to a memory store.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/memory/:name/documents",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": []
+            }
+          },
+          "docs": "Upload a document to a memory store."
+        },
+        {
+          "info": {
+            "name": "Delete a document from a memory store.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.langbase.com/v1/memory/:name/documents/:documentName",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "documentName",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a document from a memory store."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Threads",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a conversation thread.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/threads",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a conversation thread."
+        },
+        {
+          "info": {
+            "name": "Get a thread.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.langbase.com/v1/threads/:threadId",
+            "params": [
+              {
+                "name": "threadId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a thread."
+        },
+        {
+          "info": {
+            "name": "Update a thread.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.langbase.com/v1/threads/:threadId",
+            "params": [
+              {
+                "name": "threadId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a thread."
+        },
+        {
+          "info": {
+            "name": "Delete a thread.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.langbase.com/v1/threads/:threadId",
+            "params": [
+              {
+                "name": "threadId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a thread."
+        },
+        {
+          "info": {
+            "name": "List messages in a thread.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.langbase.com/v1/threads/:threadId/messages",
+            "params": [
+              {
+                "name": "threadId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List messages in a thread."
+        },
+        {
+          "info": {
+            "name": "Append messages to a thread.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/threads/:threadId/messages",
+            "params": [
+              {
+                "name": "threadId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "[]"
+            }
+          },
+          "docs": "Append messages to a thread."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Tools",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Run a live web search.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/tools/web-search",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"query\": \"Langbase\",\n  \"service\": \"exa\"\n}"
+            }
+          },
+          "docs": "Run a live web search, returning URLs and extracted content."
+        },
+        {
+          "info": {
+            "name": "Crawl and extract content from web pages.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/tools/crawl",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"url\": [\"https://langbase.com\"],\n  \"service\": \"spider\"\n}"
+            }
+          },
+          "docs": "Crawl and extract content from one or more web pages."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Parser",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Parse a document into clean text.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/parser",
+            "body": {
+              "type": "multipart-form",
+              "data": []
+            }
+          },
+          "docs": "Extract clean text from an uploaded document (PDF, CSV, XLSX, XLS, and more, up to 10 MB)."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Chunker",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Split text into overlapping chunks.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/chunker",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"content\": \"...\",\n  \"chunkMaxLength\": 1024,\n  \"chunkOverlap\": 256\n}"
+            }
+          },
+          "docs": "Split large text into overlapping, retrieval-ready chunks."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Embed",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Generate embedding vectors.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/embed",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"chunks\": [\"text to embed\"],\n  \"embeddingModel\": \"openai:text-embedding-3-large\"\n}"
+            }
+          },
+          "docs": "Generate embedding vectors for up to 100 chunks per request."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
