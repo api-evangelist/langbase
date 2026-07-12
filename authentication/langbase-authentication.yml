@@ -1,0 +1,13 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/langbase-openapi.yml
+summary:
+  types:
+  - http
+schemes:
+- name: api_key
+  type: http
+  scheme: bearer
+  bearerFormat: apiKey
+  sources:
+  - openapi/langbase-openapi.yml

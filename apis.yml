@@ -194,6 +194,12 @@ apis:
     the underlying Agent, Pipes, Memory, and Tools API calls into a single reliable
     execution.
 common:
+- type: VulnerabilityDisclosure
+  url: security/langbase-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/langbase-domain-security.yml
+- type: Authentication
+  url: authentication/langbase-authentication.yml
 - type: GitHubOrganization
   url: https://github.com/LangbaseInc
 - type: LinkedIn
@@ -208,6 +214,8 @@ common:
   url: rate-limits/langbase-rate-limits.yml
 - type: FinOps
   url: finops/langbase-finops.yml
+- url: https://langbase.com/blog
+  type: Blog
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
