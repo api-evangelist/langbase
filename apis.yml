@@ -194,6 +194,8 @@ apis:
     the underlying Agent, Pipes, Memory, and Tools API calls into a single reliable
     execution.
 common:
+- type: AgenticAccess
+  url: agentic-access/langbase-agentic-access.yml
 - type: VulnerabilityDisclosure
   url: security/langbase-vulnerability-disclosure.yml
 - type: DomainSecurity
