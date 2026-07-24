@@ -1,0 +1,122 @@
+openapi: 3.0.3
+info:
+  title: Langbase Agent API
+  description: Representative OpenAPI description of the Langbase serverless AI developer platform. All endpoints are served from https://api.langbase.com and authenticated with a Bearer API key. Generative endpoints (Pipes run, Agent run) return Server-Sent Events (SSE) when `stream` is true. This document is a faithful representative model authored by API Evangelist and is not the provider's official specification.
+  termsOfService: https://langbase.com/terms
+  contact:
+    name: Langbase Support
+    url: https://langbase.com/support
+  version: '1.0'
+servers:
+- url: https://api.langbase.com
+  description: Langbase production API
+security:
+- api_key: []
+tags:
+- name: Agent
+paths:
+  /v1/agent/run:
+    post:
+      operationId: runAgent
+      tags:
+      - Agent
+      summary: Run an agent against any of 100+ LLMs.
+      description: Runs a prompt against a model specified as `provider:model_id` (for example `openai:gpt-4o-mini`). Supports tools, generation controls, and SSE streaming when `stream` is true. A bring-your-own LLM provider key may be supplied via the `LB-LLM-Key` header.
+      parameters:
+      - in: header
+        name: LB-LLM-Key
+        required: false
+        schema:
+          type: string
+        description: Optional LLM provider API key for bring-your-own-key runs.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RunAgentRequest'
+      responses:
+        '200':
+          description: An agent run response, or an SSE stream when stream is true.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunResponse'
+            text/event-stream:
+              schema:
+                type: string
+                description: Server-Sent Events stream of completion chunks.
+components:
+  schemas:
+    Message:
+      type: object
+      properties:
+        role:
+          type: string
+          enum:
+          - system
+          - user
+          - assistant
+          - tool
+        content:
+          type: string
+        name:
+          type: string
+      required:
+      - role
+    RunAgentRequest:
+      type: object
+      properties:
+        model:
+          type: string
+          description: Model as provider:model_id, e.g. openai:gpt-4o-mini.
+          example: openai:gpt-4o-mini
+        input:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              $ref: '#/components/schemas/Message'
+        instructions:
+          type: string
+        stream:
+          type: boolean
+          default: false
+        tools:
+          type: array
+          items:
+            type: object
+        temperature:
+          type: number
+        top_p:
+          type: number
+        max_tokens:
+          type: integer
+      required:
+      - model
+      - input
+    Usage:
+      type: object
+      properties:
+        prompt_tokens:
+          type: integer
+        completion_tokens:
+          type: integer
+        total_tokens:
+          type: integer
+    RunResponse:
+      type: object
+      properties:
+        completion:
+          type: string
+          description: The generated text completion.
+        raw:
+          type: object
+          description: The raw upstream provider response.
+        usage:
+          $ref: '#/components/schemas/Usage'
+  securitySchemes:
+    api_key:
+      type: http
+      scheme: bearer
+      bearerFormat: apiKey

@@ -1,0 +1,107 @@
+openapi: 3.0.3
+info:
+  title: Langbase Agent Tools API
+  description: Representative OpenAPI description of the Langbase serverless AI developer platform. All endpoints are served from https://api.langbase.com and authenticated with a Bearer API key. Generative endpoints (Pipes run, Agent run) return Server-Sent Events (SSE) when `stream` is true. This document is a faithful representative model authored by API Evangelist and is not the provider's official specification.
+  termsOfService: https://langbase.com/terms
+  contact:
+    name: Langbase Support
+    url: https://langbase.com/support
+  version: '1.0'
+servers:
+- url: https://api.langbase.com
+  description: Langbase production API
+security:
+- api_key: []
+tags:
+- name: Tools
+paths:
+  /v1/tools/web-search:
+    post:
+      operationId: webSearch
+      tags:
+      - Tools
+      summary: Run a live web search.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebSearchRequest'
+      responses:
+        '200':
+          description: An array of search results.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WebSearchResult'
+  /v1/tools/crawl:
+    post:
+      operationId: crawl
+      tags:
+      - Tools
+      summary: Crawl and extract content from web pages.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrawlRequest'
+      responses:
+        '200':
+          description: An array of crawled page contents.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WebSearchResult'
+components:
+  schemas:
+    WebSearchRequest:
+      type: object
+      properties:
+        query:
+          type: string
+        service:
+          type: string
+          enum:
+          - exa
+        totalResults:
+          type: integer
+        domains:
+          type: array
+          items:
+            type: string
+      required:
+      - query
+      - service
+    WebSearchResult:
+      type: object
+      properties:
+        url:
+          type: string
+        content:
+          type: string
+    CrawlRequest:
+      type: object
+      properties:
+        url:
+          type: array
+          items:
+            type: string
+        service:
+          type: string
+          enum:
+          - spider
+        maxPages:
+          type: integer
+      required:
+      - url
+      - service
+  securitySchemes:
+    api_key:
+      type: http
+      scheme: bearer
+      bearerFormat: apiKey

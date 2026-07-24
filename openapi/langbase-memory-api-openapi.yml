@@ -1,0 +1,254 @@
+openapi: 3.0.3
+info:
+  title: Langbase Agent Memory API
+  description: Representative OpenAPI description of the Langbase serverless AI developer platform. All endpoints are served from https://api.langbase.com and authenticated with a Bearer API key. Generative endpoints (Pipes run, Agent run) return Server-Sent Events (SSE) when `stream` is true. This document is a faithful representative model authored by API Evangelist and is not the provider's official specification.
+  termsOfService: https://langbase.com/terms
+  contact:
+    name: Langbase Support
+    url: https://langbase.com/support
+  version: '1.0'
+servers:
+- url: https://api.langbase.com
+  description: Langbase production API
+security:
+- api_key: []
+tags:
+- name: Memory
+paths:
+  /v1/memory:
+    get:
+      operationId: listMemories
+      tags:
+      - Memory
+      summary: List memory stores.
+      responses:
+        '200':
+          description: A list of memory stores.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Memory'
+    post:
+      operationId: createMemory
+      tags:
+      - Memory
+      summary: Create a memory store.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMemoryRequest'
+      responses:
+        '200':
+          description: The created memory store.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Memory'
+  /v1/memory/{name}:
+    delete:
+      operationId: deleteMemory
+      tags:
+      - Memory
+      summary: Delete a memory store.
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A delete confirmation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+  /v1/memory/retrieve:
+    post:
+      operationId: retrieveMemory
+      tags:
+      - Memory
+      summary: Retrieve similar chunks (RAG).
+      description: Runs a semantic similarity search over one or more memory stores and returns the most relevant chunks, controlled by `topK` (default 20, max 100) and optional metadata filters.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RetrieveMemoryRequest'
+      responses:
+        '200':
+          description: An array of retrieved chunks with similarity scores.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RetrievedChunk'
+  /v1/memory/{name}/documents:
+    get:
+      operationId: listDocuments
+      tags:
+      - Memory
+      summary: List documents in a memory store.
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A list of documents.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Document'
+    post:
+      operationId: uploadDocument
+      tags:
+      - Memory
+      summary: Upload a document to a memory store.
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                documentName:
+                  type: string
+                document:
+                  type: string
+                  format: binary
+              required:
+              - documentName
+              - document
+      responses:
+        '200':
+          description: The uploaded document.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+  /v1/memory/{name}/documents/{documentName}:
+    delete:
+      operationId: deleteDocument
+      tags:
+      - Memory
+      summary: Delete a document from a memory store.
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: documentName
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A delete confirmation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+components:
+  schemas:
+    RetrieveMemoryRequest:
+      type: object
+      properties:
+        query:
+          type: string
+        memory:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+        topK:
+          type: integer
+          default: 20
+          minimum: 1
+          maximum: 100
+        filters:
+          type: array
+          items:
+            type: object
+      required:
+      - query
+      - memory
+    RetrievedChunk:
+      type: object
+      properties:
+        text:
+          type: string
+        similarity:
+          type: number
+          format: float
+        meta:
+          type: object
+          additionalProperties:
+            type: string
+    CreateMemoryRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        embeddingModel:
+          type: string
+          example: openai:text-embedding-3-large
+      required:
+      - name
+    Document:
+      type: object
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+          enum:
+          - queued
+          - in_progress
+          - completed
+          - failed
+        enabled:
+          type: boolean
+    Memory:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        embeddingModel:
+          type: string
+    DeleteResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        name:
+          type: string
+  securitySchemes:
+    api_key:
+      type: http
+      scheme: bearer
+      bearerFormat: apiKey

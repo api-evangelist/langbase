@@ -1,0 +1,62 @@
+openapi: 3.0.3
+info:
+  title: Langbase Agent Embed API
+  description: Representative OpenAPI description of the Langbase serverless AI developer platform. All endpoints are served from https://api.langbase.com and authenticated with a Bearer API key. Generative endpoints (Pipes run, Agent run) return Server-Sent Events (SSE) when `stream` is true. This document is a faithful representative model authored by API Evangelist and is not the provider's official specification.
+  termsOfService: https://langbase.com/terms
+  contact:
+    name: Langbase Support
+    url: https://langbase.com/support
+  version: '1.0'
+servers:
+- url: https://api.langbase.com
+  description: Langbase production API
+security:
+- api_key: []
+tags:
+- name: Embed
+paths:
+  /v1/embed:
+    post:
+      operationId: embed
+      tags:
+      - Embed
+      summary: Generate embedding vectors.
+      description: Generates embedding vectors for up to 100 chunks per request, each up to 8192 characters, using OpenAI, Cohere, or Google embedding models.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmbedRequest'
+      responses:
+        '200':
+          description: A two-dimensional array of embedding vectors.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: array
+                  items:
+                    type: number
+                    format: float
+components:
+  schemas:
+    EmbedRequest:
+      type: object
+      properties:
+        chunks:
+          type: array
+          items:
+            type: string
+          maxItems: 100
+        embeddingModel:
+          type: string
+          default: openai:text-embedding-3-large
+      required:
+      - chunks
+  securitySchemes:
+    api_key:
+      type: http
+      scheme: bearer
+      bearerFormat: apiKey

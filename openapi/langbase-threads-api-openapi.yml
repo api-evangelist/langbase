@@ -1,0 +1,203 @@
+openapi: 3.0.3
+info:
+  title: Langbase Agent Threads API
+  description: Representative OpenAPI description of the Langbase serverless AI developer platform. All endpoints are served from https://api.langbase.com and authenticated with a Bearer API key. Generative endpoints (Pipes run, Agent run) return Server-Sent Events (SSE) when `stream` is true. This document is a faithful representative model authored by API Evangelist and is not the provider's official specification.
+  termsOfService: https://langbase.com/terms
+  contact:
+    name: Langbase Support
+    url: https://langbase.com/support
+  version: '1.0'
+servers:
+- url: https://api.langbase.com
+  description: Langbase production API
+security:
+- api_key: []
+tags:
+- name: Threads
+paths:
+  /v1/threads:
+    post:
+      operationId: createThread
+      tags:
+      - Threads
+      summary: Create a conversation thread.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateThreadRequest'
+      responses:
+        '200':
+          description: The created thread.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Thread'
+  /v1/threads/{threadId}:
+    get:
+      operationId: getThread
+      tags:
+      - Threads
+      summary: Get a thread.
+      parameters:
+      - in: path
+        name: threadId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A thread object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Thread'
+    patch:
+      operationId: updateThread
+      tags:
+      - Threads
+      summary: Update a thread.
+      parameters:
+      - in: path
+        name: threadId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                metadata:
+                  type: object
+                  additionalProperties:
+                    type: string
+      responses:
+        '200':
+          description: The updated thread.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Thread'
+    delete:
+      operationId: deleteThread
+      tags:
+      - Threads
+      summary: Delete a thread.
+      parameters:
+      - in: path
+        name: threadId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A delete confirmation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+  /v1/threads/{threadId}/messages:
+    get:
+      operationId: listMessages
+      tags:
+      - Threads
+      summary: List messages in a thread.
+      parameters:
+      - in: path
+        name: threadId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A list of messages.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+    post:
+      operationId: appendMessages
+      tags:
+      - Threads
+      summary: Append messages to a thread.
+      parameters:
+      - in: path
+        name: threadId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Message'
+      responses:
+        '200':
+          description: The appended messages.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+components:
+  schemas:
+    Message:
+      type: object
+      properties:
+        role:
+          type: string
+          enum:
+          - system
+          - user
+          - assistant
+          - tool
+        content:
+          type: string
+        name:
+          type: string
+      required:
+      - role
+    Thread:
+      type: object
+      properties:
+        id:
+          type: string
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+        createdAt:
+          type: integer
+    DeleteResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        name:
+          type: string
+    CreateThreadRequest:
+      type: object
+      properties:
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+  securitySchemes:
+    api_key:
+      type: http
+      scheme: bearer
+      bearerFormat: apiKey
