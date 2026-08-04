@@ -1,0 +1,896 @@
+openapi: 3.0.3
+info:
+  title: Langbase API
+  description: >-
+    Representative OpenAPI description of the Langbase serverless AI developer
+    platform. All endpoints are served from https://api.langbase.com and
+    authenticated with a Bearer API key. Generative endpoints (Pipes run,
+    Agent run) return Server-Sent Events (SSE) when `stream` is true. This
+    document is a faithful representative model authored by API Evangelist and
+    is not the provider's official specification.
+  termsOfService: https://langbase.com/terms
+  contact:
+    name: Langbase Support
+    url: https://langbase.com/support
+  version: '1.0'
+servers:
+  - url: https://api.langbase.com
+    description: Langbase production API
+security:
+  - api_key: []
+tags:
+  - name: Pipes
+  - name: Agent
+  - name: Memory
+  - name: Threads
+  - name: Tools
+  - name: Parser
+  - name: Chunker
+  - name: Embed
+paths:
+  /v1/pipes/run:
+    post:
+      operationId: runPipe
+      tags:
+        - Pipes
+      summary: Run a Pipe.
+      description: >-
+        Executes a Pipe (deployable AI agent) over a message array. When
+        `stream` is true the response is delivered as Server-Sent Events (SSE)
+        with incremental delta content. The response includes an `lb-thread-id`
+        header for continuing multi-turn conversations.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RunPipeRequest'
+      responses:
+        '200':
+          description: A Pipe run completion, or an SSE stream when stream is true.
+          headers:
+            lb-thread-id:
+              schema:
+                type: string
+              description: Identifier of the conversation thread.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunResponse'
+            text/event-stream:
+              schema:
+                type: string
+                description: Server-Sent Events stream of completion chunks.
+  /v1/pipes:
+    get:
+      operationId: listPipes
+      tags:
+        - Pipes
+      summary: List Pipes.
+      responses:
+        '200':
+          description: A list of Pipes.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pipe'
+    post:
+      operationId: createPipe
+      tags:
+        - Pipes
+      summary: Create a Pipe.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePipeRequest'
+      responses:
+        '200':
+          description: The created Pipe.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pipe'
+  /v1/pipes/{name}:
+    post:
+      operationId: updatePipe
+      tags:
+        - Pipes
+      summary: Update a Pipe.
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: The name of the Pipe to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePipeRequest'
+      responses:
+        '200':
+          description: The updated Pipe.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pipe'
+  /v1/agent/run:
+    post:
+      operationId: runAgent
+      tags:
+        - Agent
+      summary: Run an agent against any of 100+ LLMs.
+      description: >-
+        Runs a prompt against a model specified as `provider:model_id`
+        (for example `openai:gpt-4o-mini`). Supports tools, generation
+        controls, and SSE streaming when `stream` is true. A bring-your-own
+        LLM provider key may be supplied via the `LB-LLM-Key` header.
+      parameters:
+        - in: header
+          name: LB-LLM-Key
+          required: false
+          schema:
+            type: string
+          description: Optional LLM provider API key for bring-your-own-key runs.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RunAgentRequest'
+      responses:
+        '200':
+          description: An agent run response, or an SSE stream when stream is true.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunResponse'
+            text/event-stream:
+              schema:
+                type: string
+                description: Server-Sent Events stream of completion chunks.
+  /v1/memory:
+    get:
+      operationId: listMemories
+      tags:
+        - Memory
+      summary: List memory stores.
+      responses:
+        '200':
+          description: A list of memory stores.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Memory'
+    post:
+      operationId: createMemory
+      tags:
+        - Memory
+      summary: Create a memory store.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMemoryRequest'
+      responses:
+        '200':
+          description: The created memory store.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Memory'
+  /v1/memory/{name}:
+    delete:
+      operationId: deleteMemory
+      tags:
+        - Memory
+      summary: Delete a memory store.
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A delete confirmation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+  /v1/memory/retrieve:
+    post:
+      operationId: retrieveMemory
+      tags:
+        - Memory
+      summary: Retrieve similar chunks (RAG).
+      description: >-
+        Runs a semantic similarity search over one or more memory stores and
+        returns the most relevant chunks, controlled by `topK` (default 20,
+        max 100) and optional metadata filters.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RetrieveMemoryRequest'
+      responses:
+        '200':
+          description: An array of retrieved chunks with similarity scores.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RetrievedChunk'
+  /v1/memory/{name}/documents:
+    get:
+      operationId: listDocuments
+      tags:
+        - Memory
+      summary: List documents in a memory store.
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of documents.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Document'
+    post:
+      operationId: uploadDocument
+      tags:
+        - Memory
+      summary: Upload a document to a memory store.
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                documentName:
+                  type: string
+                document:
+                  type: string
+                  format: binary
+              required:
+                - documentName
+                - document
+      responses:
+        '200':
+          description: The uploaded document.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+  /v1/memory/{name}/documents/{documentName}:
+    delete:
+      operationId: deleteDocument
+      tags:
+        - Memory
+      summary: Delete a document from a memory store.
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: documentName
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A delete confirmation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+  /v1/threads:
+    post:
+      operationId: createThread
+      tags:
+        - Threads
+      summary: Create a conversation thread.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateThreadRequest'
+      responses:
+        '200':
+          description: The created thread.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Thread'
+  /v1/threads/{threadId}:
+    get:
+      operationId: getThread
+      tags:
+        - Threads
+      summary: Get a thread.
+      parameters:
+        - in: path
+          name: threadId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A thread object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Thread'
+    patch:
+      operationId: updateThread
+      tags:
+        - Threads
+      summary: Update a thread.
+      parameters:
+        - in: path
+          name: threadId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                metadata:
+                  type: object
+                  additionalProperties:
+                    type: string
+      responses:
+        '200':
+          description: The updated thread.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Thread'
+    delete:
+      operationId: deleteThread
+      tags:
+        - Threads
+      summary: Delete a thread.
+      parameters:
+        - in: path
+          name: threadId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A delete confirmation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+  /v1/threads/{threadId}/messages:
+    get:
+      operationId: listMessages
+      tags:
+        - Threads
+      summary: List messages in a thread.
+      parameters:
+        - in: path
+          name: threadId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of messages.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+    post:
+      operationId: appendMessages
+      tags:
+        - Threads
+      summary: Append messages to a thread.
+      parameters:
+        - in: path
+          name: threadId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Message'
+      responses:
+        '200':
+          description: The appended messages.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+  /v1/tools/web-search:
+    post:
+      operationId: webSearch
+      tags:
+        - Tools
+      summary: Run a live web search.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebSearchRequest'
+      responses:
+        '200':
+          description: An array of search results.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WebSearchResult'
+  /v1/tools/crawl:
+    post:
+      operationId: crawl
+      tags:
+        - Tools
+      summary: Crawl and extract content from web pages.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrawlRequest'
+      responses:
+        '200':
+          description: An array of crawled page contents.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WebSearchResult'
+  /v1/parser:
+    post:
+      operationId: parseDocument
+      tags:
+        - Parser
+      summary: Parse a document into clean text.
+      description: >-
+        Extracts clean text from an uploaded document. Supports PDF, CSV,
+        XLSX, XLS and more, up to 10 MB.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                document:
+                  type: string
+                  format: binary
+                documentName:
+                  type: string
+                contentType:
+                  type: string
+              required:
+                - document
+                - documentName
+                - contentType
+      responses:
+        '200':
+          description: The parsed document content.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParseResponse'
+  /v1/chunker:
+    post:
+      operationId: chunkContent
+      tags:
+        - Chunker
+      summary: Split text into overlapping chunks.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChunkRequest'
+      responses:
+        '200':
+          description: An array of text chunks.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /v1/embed:
+    post:
+      operationId: embed
+      tags:
+        - Embed
+      summary: Generate embedding vectors.
+      description: >-
+        Generates embedding vectors for up to 100 chunks per request, each up
+        to 8192 characters, using OpenAI, Cohere, or Google embedding models.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmbedRequest'
+      responses:
+        '200':
+          description: A two-dimensional array of embedding vectors.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: array
+                  items:
+                    type: number
+                    format: float
+components:
+  securitySchemes:
+    api_key:
+      type: http
+      scheme: bearer
+      bearerFormat: apiKey
+  schemas:
+    Message:
+      type: object
+      properties:
+        role:
+          type: string
+          enum:
+            - system
+            - user
+            - assistant
+            - tool
+        content:
+          type: string
+        name:
+          type: string
+      required:
+        - role
+    RunPipeRequest:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+        variables:
+          type: object
+          additionalProperties:
+            type: string
+          description: Dynamic variables for adaptable prompts.
+        threadId:
+          type: string
+          description: Continue an existing conversation thread.
+        stream:
+          type: boolean
+          default: false
+          description: When true, responses are streamed as Server-Sent Events.
+        tools:
+          type: array
+          items:
+            type: object
+        memory:
+          type: array
+          items:
+            type: object
+          description: Memory objects to override the Pipe defaults.
+      required:
+        - messages
+    RunAgentRequest:
+      type: object
+      properties:
+        model:
+          type: string
+          description: Model as provider:model_id, e.g. openai:gpt-4o-mini.
+          example: openai:gpt-4o-mini
+        input:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                $ref: '#/components/schemas/Message'
+        instructions:
+          type: string
+        stream:
+          type: boolean
+          default: false
+        tools:
+          type: array
+          items:
+            type: object
+        temperature:
+          type: number
+        top_p:
+          type: number
+        max_tokens:
+          type: integer
+      required:
+        - model
+        - input
+    RunResponse:
+      type: object
+      properties:
+        completion:
+          type: string
+          description: The generated text completion.
+        raw:
+          type: object
+          description: The raw upstream provider response.
+        usage:
+          $ref: '#/components/schemas/Usage'
+    Usage:
+      type: object
+      properties:
+        prompt_tokens:
+          type: integer
+        completion_tokens:
+          type: integer
+        total_tokens:
+          type: integer
+    Pipe:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum:
+            - public
+            - private
+        model:
+          type: string
+        apiKey:
+          type: string
+          description: The run key scoped to this Pipe.
+    CreatePipeRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum:
+            - public
+            - private
+        model:
+          type: string
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+        tools:
+          type: array
+          items:
+            type: object
+        memory:
+          type: array
+          items:
+            type: object
+      required:
+        - name
+    Memory:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        embeddingModel:
+          type: string
+    CreateMemoryRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        embeddingModel:
+          type: string
+          example: openai:text-embedding-3-large
+      required:
+        - name
+    RetrieveMemoryRequest:
+      type: object
+      properties:
+        query:
+          type: string
+        memory:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+        topK:
+          type: integer
+          default: 20
+          minimum: 1
+          maximum: 100
+        filters:
+          type: array
+          items:
+            type: object
+      required:
+        - query
+        - memory
+    RetrievedChunk:
+      type: object
+      properties:
+        text:
+          type: string
+        similarity:
+          type: number
+          format: float
+        meta:
+          type: object
+          additionalProperties:
+            type: string
+    Document:
+      type: object
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+          enum:
+            - queued
+            - in_progress
+            - completed
+            - failed
+        enabled:
+          type: boolean
+    Thread:
+      type: object
+      properties:
+        id:
+          type: string
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+        createdAt:
+          type: integer
+    CreateThreadRequest:
+      type: object
+      properties:
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+    WebSearchRequest:
+      type: object
+      properties:
+        query:
+          type: string
+        service:
+          type: string
+          enum:
+            - exa
+        totalResults:
+          type: integer
+        domains:
+          type: array
+          items:
+            type: string
+      required:
+        - query
+        - service
+    CrawlRequest:
+      type: object
+      properties:
+        url:
+          type: array
+          items:
+            type: string
+        service:
+          type: string
+          enum:
+            - spider
+        maxPages:
+          type: integer
+      required:
+        - url
+        - service
+    WebSearchResult:
+      type: object
+      properties:
+        url:
+          type: string
+        content:
+          type: string
+    ParseResponse:
+      type: object
+      properties:
+        documentName:
+          type: string
+        content:
+          type: string
+    ChunkRequest:
+      type: object
+      properties:
+        content:
+          type: string
+        chunkMaxLength:
+          type: integer
+          default: 1024
+          minimum: 1024
+          maximum: 30000
+        chunkOverlap:
+          type: integer
+          default: 256
+          minimum: 256
+      required:
+        - content
+    EmbedRequest:
+      type: object
+      properties:
+        chunks:
+          type: array
+          items:
+            type: string
+          maxItems: 100
+        embeddingModel:
+          type: string
+          default: openai:text-embedding-3-large
+      required:
+        - chunks
+    DeleteResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        name:
+          type: string

@@ -1,0 +1,28 @@
+{
+  "provider": "langbase",
+  "sources": [
+    "langbase-agent-api-openapi.yml",
+    "langbase-chunker-api-openapi.yml",
+    "langbase-embed-api-openapi.yml",
+    "langbase-memory-api-openapi.yml",
+    "langbase-parser-api-openapi.yml",
+    "langbase-pipes-api-openapi.yml",
+    "langbase-threads-api-openapi.yml",
+    "langbase-tools-api-openapi.yml"
+  ],
+  "outputs": [
+    "langbase-agent-api-openapi.yml",
+    "langbase-chunker-api-openapi.yml",
+    "langbase-embed-api-openapi.yml",
+    "langbase-memory-api-openapi.yml",
+    "langbase-parser-api-openapi.yml",
+    "langbase-pipes-api-openapi.yml",
+    "langbase-threads-api-openapi.yml",
+    "langbase-tools-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
