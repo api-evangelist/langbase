@@ -1,0 +1,137 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Langbase Agent Threads API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Threads",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a conversation thread.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/threads",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a conversation thread."
+        },
+        {
+          "info": {
+            "name": "Get a thread.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.langbase.com/v1/threads/:threadId",
+            "params": [
+              {
+                "name": "threadId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a thread."
+        },
+        {
+          "info": {
+            "name": "Update a thread.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.langbase.com/v1/threads/:threadId",
+            "params": [
+              {
+                "name": "threadId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a thread."
+        },
+        {
+          "info": {
+            "name": "Delete a thread.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.langbase.com/v1/threads/:threadId",
+            "params": [
+              {
+                "name": "threadId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a thread."
+        },
+        {
+          "info": {
+            "name": "List messages in a thread.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.langbase.com/v1/threads/:threadId/messages",
+            "params": [
+              {
+                "name": "threadId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List messages in a thread."
+        },
+        {
+          "info": {
+            "name": "Append messages to a thread.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/threads/:threadId/messages",
+            "params": [
+              {
+                "name": "threadId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Append messages to a thread."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

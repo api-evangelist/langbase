@@ -1,0 +1,441 @@
+{
+  "item": [
+    {
+      "id": "323bb260-ee10-472a-b98c-f9bf8f4f78fe",
+      "name": "Pipes",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "5fa71455-2068-4aa1-80c5-c5ea2a640887",
+          "name": "Run a Pipe.",
+          "request": {
+            "name": "Run a Pipe.",
+            "description": {
+              "content": "Executes a Pipe (deployable AI agent) over a message array. When `stream` is true the response is delivered as Server-Sent Events (SSE) with incremental delta content. The response includes an `lb-thread-id` header for continuing multi-turn conversations.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "pipes",
+                "run"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"messages\": [\n    {\n      \"role\": \"<string>\",\n      \"content\": \"<string>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"role\": \"<string>\",\n      \"content\": \"<string>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"variables\": {\n    \"key_0\": \"<string>\",\n    \"key_1\": \"<string>\",\n    \"key_2\": \"<string>\",\n    \"key_3\": \"<string>\",\n    \"key_4\": \"<string>\"\n  },\n  \"threadId\": \"<string>\",\n  \"stream\": false,\n  \"tools\": [\n    \"<object>\",\n    \"<object>\"\n  ],\n  \"memory\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c54cf13b-66fe-4c33-b13c-29f347442cfd",
+              "name": "A Pipe run completion, or an SSE stream when stream is true.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "pipes",
+                    "run"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"messages\": [\n    {\n      \"role\": \"<string>\",\n      \"content\": \"<string>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"role\": \"<string>\",\n      \"content\": \"<string>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"variables\": {\n    \"key_0\": \"<string>\"\n  },\n  \"threadId\": \"<string>\",\n  \"stream\": false,\n  \"tools\": [\n    \"<object>\",\n    \"<object>\"\n  ],\n  \"memory\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Identifier of the conversation thread.",
+                  "key": "lb-thread-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"completion\": \"string\",\n  \"raw\": {},\n  \"usage\": {\n    \"prompt_tokens\": 257,\n    \"completion_tokens\": 6716,\n    \"total_tokens\": 1802\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8f6a38fe-81ca-4301-bc5e-11aacafca11b",
+          "name": "List Pipes.",
+          "request": {
+            "name": "List Pipes.",
+            "description": {},
+            "url": {
+              "path": [
+                "v1",
+                "pipes"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "bf33df58-7beb-4ea8-8243-bcc71453577f",
+              "name": "A list of Pipes.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "pipes"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"name\": \"string\",\n    \"description\": \"string\",\n    \"status\": \"private\",\n    \"model\": \"string\",\n    \"apiKey\": \"string\"\n  },\n  {\n    \"name\": \"string\",\n    \"description\": \"string\",\n    \"status\": \"public\",\n    \"model\": \"string\",\n    \"apiKey\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ef217437-13c1-4e85-8f73-a1024057a879",
+          "name": "Create a Pipe.",
+          "request": {
+            "name": "Create a Pipe.",
+            "description": {},
+            "url": {
+              "path": [
+                "v1",
+                "pipes"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"status\": \"<string>\",\n  \"model\": \"<string>\",\n  \"messages\": [\n    {\n      \"role\": \"<string>\",\n      \"content\": \"<string>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"role\": \"<string>\",\n      \"content\": \"<string>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"tools\": [\n    \"<object>\",\n    \"<object>\"\n  ],\n  \"memory\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "9211862c-4b21-49f0-bd0a-5dbc64ff22d2",
+              "name": "The created Pipe.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "pipes"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"status\": \"<string>\",\n  \"model\": \"<string>\",\n  \"messages\": [\n    {\n      \"role\": \"<string>\",\n      \"content\": \"<string>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"role\": \"<string>\",\n      \"content\": \"<string>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"tools\": [\n    \"<object>\",\n    \"<object>\"\n  ],\n  \"memory\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"status\": \"private\",\n  \"model\": \"string\",\n  \"apiKey\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "35874eb0-1fb4-4b09-a556-4d1403921ca4",
+          "name": "Update a Pipe.",
+          "request": {
+            "name": "Update a Pipe.",
+            "description": {},
+            "url": {
+              "path": [
+                "v1",
+                "pipes",
+                ":name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) The name of the Pipe to update."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"status\": \"<string>\",\n  \"model\": \"<string>\",\n  \"messages\": [\n    {\n      \"role\": \"<string>\",\n      \"content\": \"<string>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"role\": \"<string>\",\n      \"content\": \"<string>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"tools\": [\n    \"<object>\",\n    \"<object>\"\n  ],\n  \"memory\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "46d4d20e-bb29-4c19-a223-9c83a1c29786",
+              "name": "The updated Pipe.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "pipes",
+                    ":name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "name",
+                      "description": "(Required) The name of the Pipe to update."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"status\": \"<string>\",\n  \"model\": \"<string>\",\n  \"messages\": [\n    {\n      \"role\": \"<string>\",\n      \"content\": \"<string>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"role\": \"<string>\",\n      \"content\": \"<string>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"tools\": [\n    \"<object>\",\n    \"<object>\"\n  ],\n  \"memory\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"status\": \"private\",\n  \"model\": \"string\",\n  \"apiKey\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.langbase.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "3b3760f8-d4da-42df-bf55-d13de3642795",
+    "name": "Langbase Agent Pipes API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Representative OpenAPI description of the Langbase serverless AI developer platform. All endpoints are served from https://api.langbase.com and authenticated with a Bearer API key. Generative endpoints (Pipes run, Agent run) return Server-Sent Events (SSE) when `stream` is true. This document is a faithful representative model authored by API Evangelist and is not the provider's official specification.\n\nContact Support:\n Name: Langbase Support",
+      "type": "text/plain"
+    }
+  }
+}

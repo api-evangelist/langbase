@@ -1,0 +1,54 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Langbase Agent Tools API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Tools",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Run a live web search.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/tools/web-search",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Run a live web search."
+        },
+        {
+          "info": {
+            "name": "Crawl and extract content from web pages.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/tools/crawl",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Crawl and extract content from web pages."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

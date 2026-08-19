@@ -1,0 +1,39 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Langbase Agent Chunker API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Chunker",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Split text into overlapping chunks.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/chunker",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Split text into overlapping chunks."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

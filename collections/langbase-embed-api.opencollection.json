@@ -1,0 +1,39 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Langbase Agent Embed API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Embed",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Generate embedding vectors.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/embed",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Generates embedding vectors for up to 100 chunks per request, each up to 8192 characters, using OpenAI, Cohere, or Google embedding models."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

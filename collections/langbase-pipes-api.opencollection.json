@@ -1,0 +1,88 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Langbase Agent Pipes API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Pipes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Run a Pipe.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/pipes/run",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Executes a Pipe (deployable AI agent) over a message array. When `stream` is true the response is delivered as Server-Sent Events (SSE) with incremental delta content. The response includes an `lb-thread-id` header for continuing multi-turn conversations."
+        },
+        {
+          "info": {
+            "name": "List Pipes.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.langbase.com/v1/pipes"
+          },
+          "docs": "List Pipes."
+        },
+        {
+          "info": {
+            "name": "Create a Pipe.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/pipes",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a Pipe."
+        },
+        {
+          "info": {
+            "name": "Update a Pipe.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/pipes/:name",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "The name of the Pipe to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a Pipe."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,55 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Langbase Agent Parser API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Parser",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Parse a document into clean text.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/parser",
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "document",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "documentName",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "contentType",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Extracts clean text from an uploaded document. Supports PDF, CSV, XLSX, XLS and more, up to 10 MB."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

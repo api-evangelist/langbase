@@ -1,0 +1,241 @@
+{
+  "item": [
+    {
+      "id": "c9fa90b5-3847-474a-bf2c-763c99b5e88c",
+      "name": "Tools",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "e9666c12-79d5-4278-a9c2-47130cca7153",
+          "name": "Run a live web search.",
+          "request": {
+            "name": "Run a live web search.",
+            "description": {},
+            "url": {
+              "path": [
+                "v1",
+                "tools",
+                "web-search"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"<string>\",\n  \"service\": \"<string>\",\n  \"totalResults\": \"<integer>\",\n  \"domains\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "bb929d71-c7d6-4378-9e79-88c103b984e6",
+              "name": "An array of search results.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "tools",
+                    "web-search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"<string>\",\n  \"service\": \"<string>\",\n  \"totalResults\": \"<integer>\",\n  \"domains\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"url\": \"string\",\n    \"content\": \"string\"\n  },\n  {\n    \"url\": \"string\",\n    \"content\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "239d5115-f40b-46ba-8558-b30c81054665",
+          "name": "Crawl and extract content from web pages.",
+          "request": {
+            "name": "Crawl and extract content from web pages.",
+            "description": {},
+            "url": {
+              "path": [
+                "v1",
+                "tools",
+                "crawl"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"url\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"service\": \"<string>\",\n  \"maxPages\": \"<integer>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "44e61cb5-0244-4052-86ca-335cfd022514",
+              "name": "An array of crawled page contents.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "tools",
+                    "crawl"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"url\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"service\": \"<string>\",\n  \"maxPages\": \"<integer>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"url\": \"string\",\n    \"content\": \"string\"\n  },\n  {\n    \"url\": \"string\",\n    \"content\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.langbase.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "a26e6e0b-d6ab-43bd-8ec3-0c5558234453",
+    "name": "Langbase Agent Tools API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Representative OpenAPI description of the Langbase serverless AI developer platform. All endpoints are served from https://api.langbase.com and authenticated with a Bearer API key. Generative endpoints (Pipes run, Agent run) return Server-Sent Events (SSE) when `stream` is true. This document is a faithful representative model authored by API Evangelist and is not the provider's official specification.\n\nContact Support:\n Name: Langbase Support",
+      "type": "text/plain"
+    }
+  }
+}

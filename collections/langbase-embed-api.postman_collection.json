@@ -1,0 +1,142 @@
+{
+  "item": [
+    {
+      "id": "e39b8978-3440-41b5-bd51-f0ccfc6acc2b",
+      "name": "Embed",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "ec552aef-ca21-4820-9ed4-33d11eaeddad",
+          "name": "Generate embedding vectors.",
+          "request": {
+            "name": "Generate embedding vectors.",
+            "description": {
+              "content": "Generates embedding vectors for up to 100 chunks per request, each up to 8192 characters, using OpenAI, Cohere, or Google embedding models.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "embed"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"chunks\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"embeddingModel\": \"openai:text-embedding-3-large\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "2ef35c71-5190-4f07-99d3-2d2577208523",
+              "name": "A two-dimensional array of embedding vectors.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "embed"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"chunks\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"embeddingModel\": \"openai:text-embedding-3-large\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  [\n    8276.59700053591,\n    5067.302403588694\n  ],\n  [\n    8276.463572874154,\n    3929.0876344021253\n  ]\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.langbase.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "fa2dbdf8-bd72-4dec-b932-b066cef442f7",
+    "name": "Langbase Agent Embed API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Representative OpenAPI description of the Langbase serverless AI developer platform. All endpoints are served from https://api.langbase.com and authenticated with a Bearer API key. Generative endpoints (Pipes run, Agent run) return Server-Sent Events (SSE) when `stream` is true. This document is a faithful representative model authored by API Evangelist and is not the provider's official specification.\n\nContact Support:\n Name: Langbase Support",
+      "type": "text/plain"
+    }
+  }
+}

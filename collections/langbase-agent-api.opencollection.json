@@ -1,0 +1,45 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Langbase Agent API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Agent",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Run an agent against any of 100+ LLMs.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.langbase.com/v1/agent/run",
+            "headers": [
+              {
+                "name": "LB-LLM-Key",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Runs a prompt against a model specified as `provider:model_id` (for example `openai:gpt-4o-mini`). Supports tools, generation controls, and SSE streaming when `stream` is true. A bring-your-own LLM provider key may be supplied via the `LB-LLM-Key` header."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
