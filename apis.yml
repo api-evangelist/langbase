@@ -23,6 +23,12 @@ accessModel:
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/langbase.png
 tags:
+- Artificial Intelligence
+- Agents
+- RAG
+- LLM
+- Serverless
+tags_raw:
 - AI
 - Agents
 - RAG
@@ -38,6 +44,8 @@ apis:
   humanURL: https://langbase.com/docs/api-reference/pipe
   baseURL: https://api.langbase.com/v1
   tags:
+  - Agents
+  tags_raw:
   - Agent
   properties:
   - type: OpenAPI
