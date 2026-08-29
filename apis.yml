@@ -8,6 +8,18 @@ description: Langbase is a serverless AI developer platform for building, deploy
   Chunker, and Embed - are exposed through a single Bearer-authenticated REST API
   at api.langbase.com, with Server-Sent Events (SSE) streaming for generative
   endpoints.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: self-serve
