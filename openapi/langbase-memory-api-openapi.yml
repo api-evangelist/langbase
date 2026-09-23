@@ -1,6 +1,6 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Langbase Agent Memory API
+  title: Langbase Memory API
   description: Representative OpenAPI description of the Langbase serverless AI developer platform. All endpoints are served from https://api.langbase.com and authenticated with a Bearer API key. Generative endpoints (Pipes run, Agent run) return Server-Sent Events (SSE) when `stream` is true. This document is a faithful representative model authored by API Evangelist and is not the provider's official specification.
   termsOfService: https://langbase.com/terms
   contact:
@@ -20,7 +20,7 @@ paths:
       operationId: listMemories
       tags:
       - Memory
-      summary: List memory stores.
+      summary: List memory stores
       responses:
         '200':
           description: A list of memory stores.
@@ -34,7 +34,7 @@ paths:
       operationId: createMemory
       tags:
       - Memory
-      summary: Create a memory store.
+      summary: Create a memory store
       requestBody:
         required: true
         content:
@@ -53,7 +53,7 @@ paths:
       operationId: deleteMemory
       tags:
       - Memory
-      summary: Delete a memory store.
+      summary: Delete a memory store
       parameters:
       - in: path
         name: name
@@ -72,7 +72,7 @@ paths:
       operationId: retrieveMemory
       tags:
       - Memory
-      summary: Retrieve similar chunks (RAG).
+      summary: Retrieve similar chunks (RAG)
       description: Runs a semantic similarity search over one or more memory stores and returns the most relevant chunks, controlled by `topK` (default 20, max 100) and optional metadata filters.
       requestBody:
         required: true
@@ -94,7 +94,7 @@ paths:
       operationId: listDocuments
       tags:
       - Memory
-      summary: List documents in a memory store.
+      summary: List documents in a memory store
       parameters:
       - in: path
         name: name
@@ -114,7 +114,7 @@ paths:
       operationId: uploadDocument
       tags:
       - Memory
-      summary: Upload a document to a memory store.
+      summary: Upload a document to a memory store
       parameters:
       - in: path
         name: name
@@ -148,7 +148,7 @@ paths:
       operationId: deleteDocument
       tags:
       - Memory
-      summary: Delete a document from a memory store.
+      summary: Delete a document from a memory store
       parameters:
       - in: path
         name: name
@@ -169,6 +169,48 @@ paths:
                 $ref: '#/components/schemas/DeleteResponse'
 components:
   schemas:
+    CreateMemoryRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        embeddingModel:
+          type: string
+          example: openai:text-embedding-3-large
+      required:
+      - name
+    DeleteResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        name:
+          type: string
+    Memory:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        embeddingModel:
+          type: string
+    Document:
+      type: object
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+          enum:
+          - queued
+          - in_progress
+          - completed
+          - failed
+        enabled:
+          type: boolean
     RetrieveMemoryRequest:
       type: object
       properties:
@@ -205,48 +247,6 @@ components:
           type: object
           additionalProperties:
             type: string
-    CreateMemoryRequest:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        embeddingModel:
-          type: string
-          example: openai:text-embedding-3-large
-      required:
-      - name
-    Document:
-      type: object
-      properties:
-        name:
-          type: string
-        status:
-          type: string
-          enum:
-          - queued
-          - in_progress
-          - completed
-          - failed
-        enabled:
-          type: boolean
-    Memory:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        embeddingModel:
-          type: string
-    DeleteResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        name:
-          type: string
   securitySchemes:
     api_key:
       type: http

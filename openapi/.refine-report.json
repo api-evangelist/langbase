@@ -1,14 +1,7 @@
 {
   "provider": "langbase",
   "sources": [
-    "langbase-agent-api-openapi.yml",
-    "langbase-chunker-api-openapi.yml",
-    "langbase-embed-api-openapi.yml",
-    "langbase-memory-api-openapi.yml",
-    "langbase-parser-api-openapi.yml",
-    "langbase-pipes-api-openapi.yml",
-    "langbase-threads-api-openapi.yml",
-    "langbase-tools-api-openapi.yml"
+    "_original/langbase-openapi.yml"
   ],
   "outputs": [
     "langbase-agent-api-openapi.yml",
@@ -23,6 +16,19 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "langbase-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "langbase-agent-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "langbase-chunker-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "langbase-embed-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "langbase-memory-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "langbase-parser-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "langbase-pipes-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "langbase-threads-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "langbase-tools-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

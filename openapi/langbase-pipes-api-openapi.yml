@@ -1,6 +1,6 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Langbase Agent Pipes API
+  title: Langbase Pipes API
   description: Representative OpenAPI description of the Langbase serverless AI developer platform. All endpoints are served from https://api.langbase.com and authenticated with a Bearer API key. Generative endpoints (Pipes run, Agent run) return Server-Sent Events (SSE) when `stream` is true. This document is a faithful representative model authored by API Evangelist and is not the provider's official specification.
   termsOfService: https://langbase.com/terms
   contact:
@@ -20,7 +20,7 @@ paths:
       operationId: runPipe
       tags:
       - Pipes
-      summary: Run a Pipe.
+      summary: Run a Pipe
       description: Executes a Pipe (deployable AI agent) over a message array. When `stream` is true the response is delivered as Server-Sent Events (SSE) with incremental delta content. The response includes an `lb-thread-id` header for continuing multi-turn conversations.
       requestBody:
         required: true
@@ -49,7 +49,7 @@ paths:
       operationId: listPipes
       tags:
       - Pipes
-      summary: List Pipes.
+      summary: List Pipes
       responses:
         '200':
           description: A list of Pipes.
@@ -63,7 +63,7 @@ paths:
       operationId: createPipe
       tags:
       - Pipes
-      summary: Create a Pipe.
+      summary: Create a Pipe
       requestBody:
         required: true
         content:
@@ -82,7 +82,7 @@ paths:
       operationId: updatePipe
       tags:
       - Pipes
-      summary: Update a Pipe.
+      summary: Update a Pipe
       parameters:
       - in: path
         name: name
@@ -121,6 +121,71 @@ components:
           type: string
       required:
       - role
+    CreatePipeRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum:
+          - public
+          - private
+        model:
+          type: string
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+        tools:
+          type: array
+          items:
+            type: object
+        memory:
+          type: array
+          items:
+            type: object
+      required:
+      - name
+    RunResponse:
+      type: object
+      properties:
+        completion:
+          type: string
+          description: The generated text completion.
+        raw:
+          type: object
+          description: The raw upstream provider response.
+        usage:
+          $ref: '#/components/schemas/Usage'
+    Pipe:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum:
+          - public
+          - private
+        model:
+          type: string
+        apiKey:
+          type: string
+          description: The run key scoped to this Pipe.
+    Usage:
+      type: object
+      properties:
+        prompt_tokens:
+          type: integer
+        completion_tokens:
+          type: integer
+        total_tokens:
+          type: integer
     RunPipeRequest:
       type: object
       properties:
@@ -151,71 +216,6 @@ components:
           description: Memory objects to override the Pipe defaults.
       required:
       - messages
-    RunResponse:
-      type: object
-      properties:
-        completion:
-          type: string
-          description: The generated text completion.
-        raw:
-          type: object
-          description: The raw upstream provider response.
-        usage:
-          $ref: '#/components/schemas/Usage'
-    Usage:
-      type: object
-      properties:
-        prompt_tokens:
-          type: integer
-        completion_tokens:
-          type: integer
-        total_tokens:
-          type: integer
-    Pipe:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        status:
-          type: string
-          enum:
-          - public
-          - private
-        model:
-          type: string
-        apiKey:
-          type: string
-          description: The run key scoped to this Pipe.
-    CreatePipeRequest:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        status:
-          type: string
-          enum:
-          - public
-          - private
-        model:
-          type: string
-        messages:
-          type: array
-          items:
-            $ref: '#/components/schemas/Message'
-        tools:
-          type: array
-          items:
-            type: object
-        memory:
-          type: array
-          items:
-            type: object
-      required:
-      - name
   securitySchemes:
     api_key:
       type: http
