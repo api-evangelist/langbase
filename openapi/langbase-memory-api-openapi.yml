@@ -169,33 +169,12 @@ paths:
                 $ref: '#/components/schemas/DeleteResponse'
 components:
   schemas:
-    CreateMemoryRequest:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        embeddingModel:
-          type: string
-          example: openai:text-embedding-3-large
-      required:
-      - name
     DeleteResponse:
       type: object
       properties:
         success:
           type: boolean
         name:
-          type: string
-    Memory:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        embeddingModel:
           type: string
     Document:
       type: object
@@ -211,6 +190,18 @@ components:
           - failed
         enabled:
           type: boolean
+    CreateMemoryRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        embeddingModel:
+          type: string
+          example: openai:text-embedding-3-large
+      required:
+      - name
     RetrieveMemoryRequest:
       type: object
       properties:
@@ -235,6 +226,15 @@ components:
       required:
       - query
       - memory
+    Memory:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        embeddingModel:
+          type: string
     RetrievedChunk:
       type: object
       properties:

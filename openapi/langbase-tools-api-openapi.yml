@@ -66,22 +66,6 @@ components:
           type: string
         content:
           type: string
-    CrawlRequest:
-      type: object
-      properties:
-        url:
-          type: array
-          items:
-            type: string
-        service:
-          type: string
-          enum:
-          - spider
-        maxPages:
-          type: integer
-      required:
-      - url
-      - service
     WebSearchRequest:
       type: object
       properties:
@@ -99,6 +83,22 @@ components:
             type: string
       required:
       - query
+      - service
+    CrawlRequest:
+      type: object
+      properties:
+        url:
+          type: array
+          items:
+            type: string
+        service:
+          type: string
+          enum:
+          - spider
+        maxPages:
+          type: integer
+      required:
+      - url
       - service
   securitySchemes:
     api_key:
