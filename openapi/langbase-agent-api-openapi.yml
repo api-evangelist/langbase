@@ -75,15 +75,6 @@ components:
           type: string
       required:
       - role
-    Usage:
-      type: object
-      properties:
-        prompt_tokens:
-          type: integer
-        completion_tokens:
-          type: integer
-        total_tokens:
-          type: integer
     RunAgentRequest:
       type: object
       properties:
@@ -115,6 +106,15 @@ components:
       required:
       - model
       - input
+    Usage:
+      type: object
+      properties:
+        prompt_tokens:
+          type: integer
+        completion_tokens:
+          type: integer
+        total_tokens:
+          type: integer
   securitySchemes:
     api_key:
       type: http

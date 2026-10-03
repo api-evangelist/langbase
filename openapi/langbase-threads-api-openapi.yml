@@ -151,6 +151,17 @@ paths:
                   $ref: '#/components/schemas/Message'
 components:
   schemas:
+    Thread:
+      type: object
+      properties:
+        id:
+          type: string
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+        createdAt:
+          type: integer
     CreateThreadRequest:
       type: object
       properties:
@@ -162,6 +173,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Message'
+    DeleteResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        name:
+          type: string
     Message:
       type: object
       properties:
@@ -178,24 +196,6 @@ components:
           type: string
       required:
       - role
-    Thread:
-      type: object
-      properties:
-        id:
-          type: string
-        metadata:
-          type: object
-          additionalProperties:
-            type: string
-        createdAt:
-          type: integer
-    DeleteResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        name:
-          type: string
   securitySchemes:
     api_key:
       type: http
