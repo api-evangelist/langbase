@@ -59,22 +59,13 @@ paths:
                   $ref: '#/components/schemas/WebSearchResult'
 components:
   schemas:
-    CrawlRequest:
+    WebSearchResult:
       type: object
       properties:
         url:
-          type: array
-          items:
-            type: string
-        service:
           type: string
-          enum:
-          - spider
-        maxPages:
-          type: integer
-      required:
-      - url
-      - service
+        content:
+          type: string
     WebSearchRequest:
       type: object
       properties:
@@ -93,13 +84,22 @@ components:
       required:
       - query
       - service
-    WebSearchResult:
+    CrawlRequest:
       type: object
       properties:
         url:
+          type: array
+          items:
+            type: string
+        service:
           type: string
-        content:
-          type: string
+          enum:
+          - spider
+        maxPages:
+          type: integer
+      required:
+      - url
+      - service
   securitySchemes:
     api_key:
       type: http

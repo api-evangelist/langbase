@@ -48,17 +48,6 @@ paths:
                 description: Server-Sent Events stream of completion chunks.
 components:
   schemas:
-    RunResponse:
-      type: object
-      properties:
-        completion:
-          type: string
-          description: The generated text completion.
-        raw:
-          type: object
-          description: The raw upstream provider response.
-        usage:
-          $ref: '#/components/schemas/Usage'
     Message:
       type: object
       properties:
@@ -106,6 +95,17 @@ components:
       required:
       - model
       - input
+    RunResponse:
+      type: object
+      properties:
+        completion:
+          type: string
+          description: The generated text completion.
+        raw:
+          type: object
+          description: The raw upstream provider response.
+        usage:
+          $ref: '#/components/schemas/Usage'
     Usage:
       type: object
       properties:

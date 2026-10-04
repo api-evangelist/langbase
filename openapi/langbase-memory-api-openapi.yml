@@ -169,29 +169,6 @@ paths:
                 $ref: '#/components/schemas/DeleteResponse'
 components:
   schemas:
-    Document:
-      type: object
-      properties:
-        name:
-          type: string
-        status:
-          type: string
-          enum:
-          - queued
-          - in_progress
-          - completed
-          - failed
-        enabled:
-          type: boolean
-    Memory:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        embeddingModel:
-          type: string
     RetrievedChunk:
       type: object
       properties:
@@ -247,6 +224,29 @@ components:
           example: openai:text-embedding-3-large
       required:
       - name
+    Memory:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        embeddingModel:
+          type: string
+    Document:
+      type: object
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+          enum:
+          - queued
+          - in_progress
+          - completed
+          - failed
+        enabled:
+          type: boolean
   securitySchemes:
     api_key:
       type: http

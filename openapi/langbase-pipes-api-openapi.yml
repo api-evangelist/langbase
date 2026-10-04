@@ -105,87 +105,6 @@ paths:
                 $ref: '#/components/schemas/Pipe'
 components:
   schemas:
-    Pipe:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        status:
-          type: string
-          enum:
-          - public
-          - private
-        model:
-          type: string
-        apiKey:
-          type: string
-          description: The run key scoped to this Pipe.
-    Usage:
-      type: object
-      properties:
-        prompt_tokens:
-          type: integer
-        completion_tokens:
-          type: integer
-        total_tokens:
-          type: integer
-    Message:
-      type: object
-      properties:
-        role:
-          type: string
-          enum:
-          - system
-          - user
-          - assistant
-          - tool
-        content:
-          type: string
-        name:
-          type: string
-      required:
-      - role
-    CreatePipeRequest:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        status:
-          type: string
-          enum:
-          - public
-          - private
-        model:
-          type: string
-        messages:
-          type: array
-          items:
-            $ref: '#/components/schemas/Message'
-        tools:
-          type: array
-          items:
-            type: object
-        memory:
-          type: array
-          items:
-            type: object
-      required:
-      - name
-    RunResponse:
-      type: object
-      properties:
-        completion:
-          type: string
-          description: The generated text completion.
-        raw:
-          type: object
-          description: The raw upstream provider response.
-        usage:
-          $ref: '#/components/schemas/Usage'
     RunPipeRequest:
       type: object
       properties:
@@ -216,6 +135,87 @@ components:
           description: Memory objects to override the Pipe defaults.
       required:
       - messages
+    Usage:
+      type: object
+      properties:
+        prompt_tokens:
+          type: integer
+        completion_tokens:
+          type: integer
+        total_tokens:
+          type: integer
+    RunResponse:
+      type: object
+      properties:
+        completion:
+          type: string
+          description: The generated text completion.
+        raw:
+          type: object
+          description: The raw upstream provider response.
+        usage:
+          $ref: '#/components/schemas/Usage'
+    Pipe:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum:
+          - public
+          - private
+        model:
+          type: string
+        apiKey:
+          type: string
+          description: The run key scoped to this Pipe.
+    CreatePipeRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum:
+          - public
+          - private
+        model:
+          type: string
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+        tools:
+          type: array
+          items:
+            type: object
+        memory:
+          type: array
+          items:
+            type: object
+      required:
+      - name
+    Message:
+      type: object
+      properties:
+        role:
+          type: string
+          enum:
+          - system
+          - user
+          - assistant
+          - tool
+        content:
+          type: string
+        name:
+          type: string
+      required:
+      - role
   securitySchemes:
     api_key:
       type: http

@@ -151,6 +151,13 @@ paths:
                   $ref: '#/components/schemas/Message'
 components:
   schemas:
+    DeleteResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        name:
+          type: string
     Thread:
       type: object
       properties:
@@ -173,13 +180,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Message'
-    DeleteResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        name:
-          type: string
     Message:
       type: object
       properties:
