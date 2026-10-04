@@ -406,6 +406,9 @@ apis:
   - type: Documentation
     url: https://langbase.com/docs/workflows
 common:
+- type: CapabilityMap
+  url: capabilities/langbase-capability-edges.yml
+  name: Langbase Business Capability Map
 - type: AgenticAccess
   url: agentic-access/langbase-agentic-access.yml
 - type: VulnerabilityDisclosure
