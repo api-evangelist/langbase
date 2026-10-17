@@ -169,25 +169,6 @@ paths:
                 $ref: '#/components/schemas/DeleteResponse'
 components:
   schemas:
-    RetrievedChunk:
-      type: object
-      properties:
-        text:
-          type: string
-        similarity:
-          type: number
-          format: float
-        meta:
-          type: object
-          additionalProperties:
-            type: string
-    DeleteResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        name:
-          type: string
     RetrieveMemoryRequest:
       type: object
       properties:
@@ -224,6 +205,18 @@ components:
           example: openai:text-embedding-3-large
       required:
       - name
+    RetrievedChunk:
+      type: object
+      properties:
+        text:
+          type: string
+        similarity:
+          type: number
+          format: float
+        meta:
+          type: object
+          additionalProperties:
+            type: string
     Memory:
       type: object
       properties:
@@ -247,6 +240,13 @@ components:
           - failed
         enabled:
           type: boolean
+    DeleteResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        name:
+          type: string
   securitySchemes:
     api_key:
       type: http
