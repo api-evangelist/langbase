@@ -1,61 +1,109 @@
 openapi: 3.2.0
 info:
   title: Langbase Chunker API
-  description: Representative OpenAPI description of the Langbase serverless AI developer platform. All endpoints are served from https://api.langbase.com and authenticated with a Bearer API key. Generative endpoints (Pipes run, Agent run) return Server-Sent Events (SSE) when `stream` is true. This document is a faithful representative model authored by API Evangelist and is not the provider's official specification.
-  termsOfService: https://langbase.com/terms
-  contact:
-    name: Langbase Support
-    url: https://langbase.com/support
-  version: '1.0'
+  version: 1.0.0
 servers:
 - url: https://api.langbase.com
-  description: Langbase production API
-security:
-- api_key: []
+  description: Production
 tags:
 - name: Chunker
 paths:
   /v1/chunker:
     post:
-      operationId: chunkContent
-      tags:
-      - Chunker
-      summary: Split text into overlapping chunks
+      operationId: v1Chunk
+      security:
+      - bearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChunkRequest'
+              type: object
+              properties:
+                content:
+                  type: string
+                  minLength: 1
+                chunkMaxLength:
+                  type: number
+                  minimum: 1024
+                  maximum: 30000
+                  default: 1024
+                chunkOverlap:
+                  type: number
+                  minimum: 256
+                  default: 256
+              required:
+              - content
       responses:
         '200':
-          description: An array of text chunks.
+          description: 'Langbase: Chunk v1'
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: string
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  chunks:
+                    type: array
+                    items:
+                      type: string
+                required:
+                - success
+                - chunks
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      status:
+                        type: string
+                      message:
+                        type: string
+                      docs:
+                        type: string
+                    required:
+                    - code
+                    - status
+                    - message
+                    - docs
+                required:
+                - success
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+                  code:
+                    type: string
+                required:
+                - success
+                - error
+                - code
+      tags:
+      - Chunker
+      summary: V1 chunk
+      x-summary-source: derived
 components:
-  schemas:
-    ChunkRequest:
-      type: object
-      properties:
-        content:
-          type: string
-        chunkMaxLength:
-          type: integer
-          default: 1024
-          minimum: 1024
-          maximum: 30000
-        chunkOverlap:
-          type: integer
-          default: 256
-          minimum: 256
-      required:
-      - content
   securitySchemes:
-    api_key:
+    bearerAuth:
+      bearerFormat: Langbase-API-Key
       type: http
       scheme: bearer
-      bearerFormat: apiKey
+      description: 'Enter your Langbase API key with format: Bearer Langbase-API-Key'

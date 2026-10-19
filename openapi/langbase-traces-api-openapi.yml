@@ -1,0 +1,356 @@
+openapi: 3.2.0
+info:
+  title: Langbase Traces API
+  version: 1.0.0
+servers:
+- url: https://api.langbase.com
+  description: Production
+tags:
+- name: Traces
+paths:
+  /v1/traces:
+    post:
+      operationId: v1TracesCreate
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: 'Langbase: Create Trace v1'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uuid
+                    object:
+                      type: string
+                      enum:
+                      - trace
+                    created_at:
+                      type: string
+                      format: date
+                    metadata:
+                      type: object
+                      properties:
+                        primitiveId:
+                          type: string
+                        primitiveName:
+                          type: string
+                        entityId:
+                          type: string
+                        createdAt:
+                          type: string
+                          format: date
+                        updatedAt:
+                          type: string
+                          format: date
+                      required:
+                      - primitiveId
+                      - primitiveName
+                      - entityId
+                      - createdAt
+                      - updatedAt
+                  required:
+                  - id
+                  - object
+                  - created_at
+                  - metadata
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      status:
+                        type: string
+                      message:
+                        type: string
+                      docs:
+                        type: string
+                    required:
+                    - code
+                    - status
+                    - message
+                    - docs
+                required:
+                - success
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+                  code:
+                    type: string
+                required:
+                - success
+                - error
+                - code
+      tags:
+      - Traces
+      summary: V1 traces create
+      x-summary-source: derived
+    get:
+      operationId: v1TracesList
+      security:
+      - bearerAuth: []
+      parameters:
+      - schema:
+          type: string
+        required: true
+        name: primitiveId
+        in: query
+      - schema:
+          type: string
+        required: true
+        name: primitiveName
+        in: query
+      - schema:
+          type:
+          - number
+          - 'null'
+        required: false
+        name: limit
+        in: query
+      - schema:
+          type:
+          - number
+          - 'null'
+        required: false
+        name: offset
+        in: query
+      - schema:
+          type: string
+          enum:
+          - asc
+          - desc
+        required: false
+        name: order
+        in: query
+      responses:
+        '200':
+          description: 'Langbase: List Traces v1'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uuid
+                    object:
+                      type: string
+                      enum:
+                      - trace
+                    created_at:
+                      type: string
+                      format: date
+                    metadata:
+                      type: object
+                      properties:
+                        primitiveId:
+                          type: string
+                        primitiveName:
+                          type: string
+                        entityId:
+                          type: string
+                        createdAt:
+                          type: string
+                          format: date
+                        updatedAt:
+                          type: string
+                          format: date
+                      required:
+                      - primitiveId
+                      - primitiveName
+                      - entityId
+                      - createdAt
+                      - updatedAt
+                  required:
+                  - id
+                  - object
+                  - created_at
+                  - metadata
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      status:
+                        type: string
+                      message:
+                        type: string
+                      docs:
+                        type: string
+                    required:
+                    - code
+                    - status
+                    - message
+                    - docs
+                required:
+                - success
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+                  code:
+                    type: string
+                required:
+                - success
+                - error
+                - code
+      tags:
+      - Traces
+      summary: V1 traces list
+      x-summary-source: derived
+  /v1/traces/{traceId}:
+    get:
+      operationId: v1TracesGet
+      security:
+      - bearerAuth: []
+      parameters:
+      - schema:
+          type: string
+          format: uuid
+        required: true
+        name: traceId
+        in: path
+      responses:
+        '200':
+          description: 'Langbase: Get Trace v1'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uuid
+                    object:
+                      type: string
+                      enum:
+                      - trace
+                    created_at:
+                      type: string
+                      format: date
+                    metadata:
+                      type: object
+                      properties:
+                        primitiveId:
+                          type: string
+                        primitiveName:
+                          type: string
+                        entityId:
+                          type: string
+                        createdAt:
+                          type: string
+                          format: date
+                        updatedAt:
+                          type: string
+                          format: date
+                      required:
+                      - primitiveId
+                      - primitiveName
+                      - entityId
+                      - createdAt
+                      - updatedAt
+                  required:
+                  - id
+                  - object
+                  - created_at
+                  - metadata
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      status:
+                        type: string
+                      message:
+                        type: string
+                      docs:
+                        type: string
+                    required:
+                    - code
+                    - status
+                    - message
+                    - docs
+                required:
+                - success
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+                  code:
+                    type: string
+                required:
+                - success
+                - error
+                - code
+      tags:
+      - Traces
+      summary: V1 traces get
+      x-summary-source: derived
+components:
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: Langbase-API-Key
+      type: http
+      scheme: bearer
+      description: 'Enter your Langbase API key with format: Bearer Langbase-API-Key'

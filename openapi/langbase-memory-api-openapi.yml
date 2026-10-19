@@ -1,254 +1,779 @@
 openapi: 3.2.0
 info:
   title: Langbase Memory API
-  description: Representative OpenAPI description of the Langbase serverless AI developer platform. All endpoints are served from https://api.langbase.com and authenticated with a Bearer API key. Generative endpoints (Pipes run, Agent run) return Server-Sent Events (SSE) when `stream` is true. This document is a faithful representative model authored by API Evangelist and is not the provider's official specification.
-  termsOfService: https://langbase.com/terms
-  contact:
-    name: Langbase Support
-    url: https://langbase.com/support
-  version: '1.0'
+  version: 1.0.0
 servers:
 - url: https://api.langbase.com
-  description: Langbase production API
-security:
-- api_key: []
+  description: Production
 tags:
 - name: Memory
 paths:
   /v1/memory:
-    get:
-      operationId: listMemories
-      tags:
-      - Memory
-      summary: List memory stores
-      responses:
-        '200':
-          description: A list of memory stores.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Memory'
     post:
-      operationId: createMemory
-      tags:
-      - Memory
-      summary: Create a memory store
+      operationId: v1MemoryCreate
+      security:
+      - bearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/CreateMemoryRequest'
-      responses:
-        '200':
-          description: The created memory store.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Memory'
-  /v1/memory/{name}:
-    delete:
-      operationId: deleteMemory
-      tags:
-      - Memory
-      summary: Delete a memory store
-      parameters:
-      - in: path
-        name: name
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          description: A delete confirmation.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DeleteResponse'
-  /v1/memory/retrieve:
-    post:
-      operationId: retrieveMemory
-      tags:
-      - Memory
-      summary: Retrieve similar chunks (RAG)
-      description: Runs a semantic similarity search over one or more memory stores and returns the most relevant chunks, controlled by `topK` (default 20, max 100) and optional metadata filters.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RetrieveMemoryRequest'
-      responses:
-        '200':
-          description: An array of retrieved chunks with similarity scores.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/RetrievedChunk'
-  /v1/memory/{name}/documents:
-    get:
-      operationId: listDocuments
-      tags:
-      - Memory
-      summary: List documents in a memory store
-      parameters:
-      - in: path
-        name: name
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          description: A list of documents.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Document'
-    post:
-      operationId: uploadDocument
-      tags:
-      - Memory
-      summary: Upload a document to a memory store
-      parameters:
-      - in: path
-        name: name
-        required: true
-        schema:
-          type: string
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
             schema:
               type: object
               properties:
-                documentName:
+                name:
                   type: string
-                document:
+                  minLength: 1
+                description:
                   type: string
-                  format: binary
+                embedding_model:
+                  type: string
+                  enum:
+                  - openai:text-embedding-3-large
+                  - cohere:embed-v4.0
+                  - cohere:embed-multilingual-v3.0
+                  - cohere:embed-multilingual-light-v3.0
+                  - google:text-embedding-004
+                  default: openai:text-embedding-3-large
+                chunk_size:
+                  type: integer
+                  minimum: 1024
+                  maximum: 30000
+                  default: 10000
+                chunk_overlap:
+                  type: integer
+                  minimum: 256
+                  default: 2048
+                top_k:
+                  type: integer
+                  minimum: 1
+                  maximum: 100
+                  default: 3
               required:
-              - documentName
-              - document
+              - name
       responses:
         '200':
-          description: The uploaded document.
+          description: 'Langbase: Create memory v1'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Document'
-  /v1/memory/{name}/documents/{documentName}:
-    delete:
-      operationId: deleteDocument
+                type: object
+                properties:
+                  name:
+                    type: string
+                    minLength: 1
+                  description:
+                    type: string
+                  owner_login:
+                    type: string
+                  embedding_model:
+                    type: string
+                    enum:
+                    - openai:text-embedding-3-large
+                    - cohere:embed-v4.0
+                    - cohere:embed-multilingual-v3.0
+                    - cohere:embed-multilingual-light-v3.0
+                    - google:text-embedding-004
+                  chunk_size:
+                    type: integer
+                    minimum: 1024
+                    maximum: 30000
+                  chunk_overlap:
+                    type: integer
+                    minimum: 256
+                  url:
+                    type: string
+                required:
+                - name
+                - owner_login
+                - embedding_model
+                - chunk_size
+                - chunk_overlap
+                - url
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      status:
+                        type: string
+                      message:
+                        type: string
+                      docs:
+                        type: string
+                    required:
+                    - code
+                    - status
+                    - message
+                    - docs
+                required:
+                - success
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+                  code:
+                    type: string
+                required:
+                - success
+                - error
+                - code
       tags:
       - Memory
-      summary: Delete a document from a memory store
-      parameters:
-      - in: path
-        name: name
-        required: true
-        schema:
-          type: string
-      - in: path
-        name: documentName
-        required: true
-        schema:
-          type: string
+      summary: V1 memory create
+      x-summary-source: derived
+    get:
+      operationId: v1MemoryList
+      security:
+      - bearerAuth: []
       responses:
         '200':
-          description: A delete confirmation.
+          description: 'Langbase: List all memory v1'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeleteResponse'
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    owner_login:
+                      type: string
+                    url:
+                      type: string
+                  required:
+                  - name
+                  - owner_login
+                  - url
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      status:
+                        type: string
+                      message:
+                        type: string
+                      docs:
+                        type: string
+                    required:
+                    - code
+                    - status
+                    - message
+                    - docs
+                required:
+                - success
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+                  code:
+                    type: string
+                required:
+                - success
+                - error
+                - code
+      tags:
+      - Memory
+      summary: V1 memory list
+      x-summary-source: derived
+  /v1/memory/retrieve:
+    post:
+      operationId: v1MemoryRetrieve
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                memory:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        minLength: 1
+                      filters: {}
+                    required:
+                    - name
+                  minItems: 1
+                query:
+                  type: string
+                  minLength: 1
+                topK:
+                  type: integer
+                  minimum: 1
+                  maximum: 100
+                  default: 20
+              required:
+              - memory
+              - query
+      responses:
+        '200':
+          description: 'Langbase: Memory retrieve v1'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  chunks:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        text:
+                          type: string
+                        similarity:
+                          type: number
+                        meta:
+                          allOf:
+                          - type: object
+                            properties:
+                              docName:
+                                type: string
+                            required:
+                            - docName
+                          - type: object
+                            additionalProperties:
+                              type: string
+                              minLength: 1
+                      required:
+                      - text
+                      - similarity
+                      - meta
+                required:
+                - chunks
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      status:
+                        type: string
+                      message:
+                        type: string
+                      docs:
+                        type: string
+                    required:
+                    - code
+                    - status
+                    - message
+                    - docs
+                required:
+                - success
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+                  code:
+                    type: string
+                required:
+                - success
+                - error
+                - code
+      tags:
+      - Memory
+      summary: V1 memory retrieve
+      x-summary-source: derived
+  /v1/memory/{memoryName}:
+    delete:
+      operationId: v1MemoryDelete
+      security:
+      - bearerAuth: []
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+        required: true
+        name: memoryName
+        in: path
+      responses:
+        '200':
+          description: 'Langbase: Delete memory v1'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                required:
+                - success
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      status:
+                        type: string
+                      message:
+                        type: string
+                      docs:
+                        type: string
+                    required:
+                    - code
+                    - status
+                    - message
+                    - docs
+                required:
+                - success
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+                  code:
+                    type: string
+                required:
+                - success
+                - error
+                - code
+      tags:
+      - Memory
+      summary: V1 memory delete
+      x-summary-source: derived
+  /v1/memory/documents:
+    post:
+      operationId: v1MemoryDocumentUpload
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                memoryName:
+                  type: string
+                  minLength: 1
+                documentName:
+                  type: string
+                fileName:
+                  type: string
+              required:
+              - memoryName
+      responses:
+        '200':
+          description: 'Langbase: Memory document upload v1'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  signedUrl:
+                    type: string
+                required:
+                - signedUrl
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      status:
+                        type: string
+                      message:
+                        type: string
+                      docs:
+                        type: string
+                    required:
+                    - code
+                    - status
+                    - message
+                    - docs
+                required:
+                - success
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+                  code:
+                    type: string
+                required:
+                - success
+                - error
+                - code
+      tags:
+      - Memory
+      summary: V1 memory document upload
+      x-summary-source: derived
+  /v1/memory/{memoryName}/documents:
+    get:
+      operationId: v1MemoryDocumentsList
+      security:
+      - bearerAuth: []
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+        required: true
+        name: memoryName
+        in: path
+      responses:
+        '200':
+          description: 'Langbase: Memory documents list v1'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    status:
+                      type: string
+                    status_message:
+                      type: string
+                    metadata:
+                      type: object
+                      properties:
+                        size:
+                          type: number
+                        type:
+                          type: string
+                      required:
+                      - size
+                      - type
+                    enabled:
+                      type: boolean
+                    owner_login:
+                      type: string
+                    chunk_size:
+                      type: number
+                    chunk_overlap:
+                      type: number
+                  required:
+                  - name
+                  - status
+                  - metadata
+                  - enabled
+                  - owner_login
+                  - chunk_size
+                  - chunk_overlap
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      status:
+                        type: string
+                      message:
+                        type: string
+                      docs:
+                        type: string
+                    required:
+                    - code
+                    - status
+                    - message
+                    - docs
+                required:
+                - success
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+                  code:
+                    type: string
+                required:
+                - success
+                - error
+                - code
+      tags:
+      - Memory
+      summary: V1 memory documents list
+      x-summary-source: derived
+  /v1/memory/{memoryName}/documents/{documentName}/embeddings/retry:
+    get:
+      operationId: v1MemoryDocumentEmbeddingsRetry
+      security:
+      - bearerAuth: []
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+        required: true
+        name: memoryName
+        in: path
+      - schema:
+          type: string
+          minLength: 1
+        required: true
+        name: documentName
+        in: path
+      responses:
+        '200':
+          description: 'Langbase: Memory document retry generate embeddings v1'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      success:
+                        type: boolean
+                    required:
+                    - success
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      status:
+                        type: string
+                      message:
+                        type: string
+                      docs:
+                        type: string
+                    required:
+                    - code
+                    - status
+                    - message
+                    - docs
+                required:
+                - data
+                - error
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      status:
+                        type: string
+                      message:
+                        type: string
+                      docs:
+                        type: string
+                    required:
+                    - code
+                    - status
+                    - message
+                    - docs
+                required:
+                - success
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+                  code:
+                    type: string
+                required:
+                - success
+                - error
+                - code
+      tags:
+      - Memory
+      summary: V1 memory document embeddings retry
+      x-summary-source: derived
+  /v1/memory/{memoryName}/documents/{documentName}:
+    delete:
+      operationId: betaMemoryDocumentDelete
+      security:
+      - bearerAuth: []
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+        required: true
+        name: memoryName
+        in: path
+      - schema:
+          type: string
+          minLength: 1
+        required: true
+        name: documentName
+        in: path
+      responses:
+        '200':
+          description: 'Langbase: Delete memory document v1'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                required:
+                - success
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      status:
+                        type: string
+                      message:
+                        type: string
+                      docs:
+                        type: string
+                    required:
+                    - code
+                    - status
+                    - message
+                    - docs
+                required:
+                - success
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+                  code:
+                    type: string
+                required:
+                - success
+                - error
+                - code
+      tags:
+      - Memory
+      summary: Beta memory document delete
+      x-summary-source: derived
 components:
-  schemas:
-    RetrieveMemoryRequest:
-      type: object
-      properties:
-        query:
-          type: string
-        memory:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-        topK:
-          type: integer
-          default: 20
-          minimum: 1
-          maximum: 100
-        filters:
-          type: array
-          items:
-            type: object
-      required:
-      - query
-      - memory
-    CreateMemoryRequest:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        embeddingModel:
-          type: string
-          example: openai:text-embedding-3-large
-      required:
-      - name
-    RetrievedChunk:
-      type: object
-      properties:
-        text:
-          type: string
-        similarity:
-          type: number
-          format: float
-        meta:
-          type: object
-          additionalProperties:
-            type: string
-    Memory:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        embeddingModel:
-          type: string
-    Document:
-      type: object
-      properties:
-        name:
-          type: string
-        status:
-          type: string
-          enum:
-          - queued
-          - in_progress
-          - completed
-          - failed
-        enabled:
-          type: boolean
-    DeleteResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        name:
-          type: string
   securitySchemes:
-    api_key:
+    bearerAuth:
+      bearerFormat: Langbase-API-Key
       type: http
       scheme: bearer
-      bearerFormat: apiKey
+      description: 'Enter your Langbase API key with format: Bearer Langbase-API-Key'

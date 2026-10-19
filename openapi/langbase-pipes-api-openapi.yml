@@ -1,223 +1,1159 @@
 openapi: 3.2.0
 info:
   title: Langbase Pipes API
-  description: Representative OpenAPI description of the Langbase serverless AI developer platform. All endpoints are served from https://api.langbase.com and authenticated with a Bearer API key. Generative endpoints (Pipes run, Agent run) return Server-Sent Events (SSE) when `stream` is true. This document is a faithful representative model authored by API Evangelist and is not the provider's official specification.
-  termsOfService: https://langbase.com/terms
-  contact:
-    name: Langbase Support
-    url: https://langbase.com/support
-  version: '1.0'
+  version: 1.0.0
 servers:
 - url: https://api.langbase.com
-  description: Langbase production API
-security:
-- api_key: []
+  description: Production
 tags:
 - name: Pipes
 paths:
   /v1/pipes/run:
     post:
-      operationId: runPipe
+      operationId: v1PipeRun
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: 'Langbase: Pipe v1 Run'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  completion:
+                    type: string
+                  raw:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      object:
+                        type: string
+                      created:
+                        type: number
+                      model:
+                        type: string
+                      provider:
+                        type: string
+                      choices:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            index:
+                              type: number
+                            message:
+                              type: object
+                              properties:
+                                role:
+                                  type: string
+                                  enum:
+                                  - user
+                                  - system
+                                  - tool
+                                  - assistant
+                                content:
+                                  type:
+                                  - string
+                                  - 'null'
+                                refusal:
+                                  type:
+                                  - string
+                                  - 'null'
+                                annotations:
+                                  type: array
+                                  items: {}
+                                tool_calls:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      id:
+                                        type: string
+                                      type:
+                                        type: string
+                                        enum:
+                                        - function
+                                      function:
+                                        type: object
+                                        properties:
+                                          name:
+                                            type: string
+                                          arguments:
+                                            type: string
+                                        required:
+                                        - name
+                                    required:
+                                    - id
+                                    - type
+                                    - function
+                              required:
+                              - role
+                              - content
+                              - tool_calls
+                            logprobs:
+                              type:
+                              - string
+                              - 'null'
+                            finish_reason:
+                              type: string
+                          required:
+                          - index
+                          - message
+                      usage:
+                        type: object
+                        properties:
+                          prompt_tokens:
+                            type: number
+                          completion_tokens:
+                            type: number
+                          total_tokens:
+                            type: number
+                          prompt_tokens_details:
+                            type: object
+                            properties:
+                              cached_tokens:
+                                type: number
+                              audio_tokens:
+                                type: number
+                            required:
+                            - cached_tokens
+                            - audio_tokens
+                          completion_tokens_details:
+                            type: object
+                            properties:
+                              reasoning_tokens:
+                                type: number
+                              audio_tokens:
+                                type: number
+                              accepted_prediction_tokens:
+                                type: number
+                              rejected_prediction_tokens:
+                                type: number
+                            required:
+                            - reasoning_tokens
+                            - audio_tokens
+                            - accepted_prediction_tokens
+                            - rejected_prediction_tokens
+                        required:
+                        - prompt_tokens
+                        - completion_tokens
+                        - total_tokens
+                      service_tier:
+                        type: string
+                      system_fingerprint:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - id
+                    - object
+                    - created
+                    - model
+                    - choices
+                    - usage
+                required:
+                - completion
+                - raw
+            application/octet-stream:
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      status:
+                        type: string
+                      message:
+                        type: string
+                      docs:
+                        type: string
+                    required:
+                    - code
+                    - status
+                    - message
+                    - docs
+                required:
+                - success
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+                  code:
+                    type: string
+                required:
+                - success
+                - error
+                - code
       tags:
       - Pipes
-      summary: Run a Pipe
-      description: Executes a Pipe (deployable AI agent) over a message array. When `stream` is true the response is delivered as Server-Sent Events (SSE) with incremental delta content. The response includes an `lb-thread-id` header for continuing multi-turn conversations.
+      summary: V1 pipe run
+      x-summary-source: derived
+  /v1/pipes:
+    post:
+      operationId: v1PipeCreate
+      security:
+      - bearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RunPipeRequest'
+              type: object
+              properties:
+                name:
+                  type: string
+                upsert:
+                  type: boolean
+                  default: false
+                description:
+                  type: string
+                type:
+                  type: string
+                  enum:
+                  - chat
+                  - generate
+                  default: generate
+                status:
+                  type: string
+                  enum:
+                  - private
+                  - public
+                  default: public
+                model:
+                  type: string
+                  default: openai:gpt-4.1-mini
+                stream:
+                  type: boolean
+                  default: true
+                json:
+                  type: boolean
+                  default: false
+                store:
+                  type: boolean
+                  default: true
+                moderate:
+                  type: boolean
+                  default: true
+                top_p:
+                  type: number
+                  default: 1
+                max_tokens:
+                  type: number
+                  default: 2048
+                temperature:
+                  type: number
+                  default: 0.7
+                presence_penalty:
+                  type: number
+                  default: 0
+                frequency_penalty:
+                  type: number
+                  default: 0
+                stop:
+                  type: array
+                  items:
+                    type: string
+                  default: []
+                tool_choice:
+                  anyOf:
+                  - type: string
+                    enum:
+                    - auto
+                    - required
+                  - type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - function
+                        default: function
+                      function:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                        required:
+                        - name
+                    required:
+                    - function
+                  default: auto
+                parallel_tool_calls:
+                  type: boolean
+                  default: true
+                messages:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      role:
+                        type: string
+                        enum:
+                        - user
+                        - system
+                        - function
+                        - assistant
+                      name:
+                        type: string
+                      content:
+                        type: string
+                    required:
+                    - role
+                    - content
+                  default: []
+                variables:
+                  anyOf:
+                  - type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          minLength: 1
+                        value:
+                          type: string
+                          minLength: 1
+                      required:
+                      - name
+                      - value
+                  - type: object
+                    additionalProperties:
+                      type: string
+                      minLength: 1
+                  default: []
+                tools:
+                  anyOf:
+                  - type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                          - function
+                          default: function
+                        function:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            description:
+                              type: string
+                            parameters:
+                              type: object
+                              additionalProperties: {}
+                          required:
+                          - name
+                      required:
+                      - function
+                    default: []
+                  - type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        description:
+                          type: string
+                        parameters:
+                          type: object
+                          additionalProperties: {}
+                      required:
+                      - name
+                    default: []
+                  default: []
+                memory:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        minLength: 1
+                    required:
+                    - name
+                  default: []
+              required:
+              - name
       responses:
         '200':
-          description: A Pipe run completion, or an SSE stream when stream is true.
-          headers:
-            lb-thread-id:
-              schema:
-                type: string
-              description: Identifier of the conversation thread.
+          description: 'Langbase: Create pipe v1'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RunResponse'
-            text/event-stream:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  owner_login:
+                    type: string
+                  status:
+                    type: string
+                    enum:
+                    - private
+                    - public
+                  description:
+                    type: string
+                  type:
+                    type: string
+                    enum:
+                    - chat
+                    - generate
+                    default: generate
+                  api_key:
+                    type: string
+                  url:
+                    type: string
+                required:
+                - name
+                - owner_login
+                - status
+                - api_key
+                - url
+        '400':
+          description: Bad Request
+          content:
+            application/json:
               schema:
-                type: string
-                description: Server-Sent Events stream of completion chunks.
-  /v1/pipes:
-    get:
-      operationId: listPipes
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      status:
+                        type: string
+                      message:
+                        type: string
+                      docs:
+                        type: string
+                    required:
+                    - code
+                    - status
+                    - message
+                    - docs
+                required:
+                - success
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+                  code:
+                    type: string
+                required:
+                - success
+                - error
+                - code
       tags:
       - Pipes
-      summary: List Pipes
+      summary: V1 pipe create
+      x-summary-source: derived
+    get:
+      operationId: v1PipesList
+      security:
+      - bearerAuth: []
       responses:
         '200':
-          description: A list of Pipes.
+          description: 'Langbase: List all pipes V1'
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Pipe'
-    post:
-      operationId: createPipe
-      tags:
-      - Pipes
-      summary: Create a Pipe
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreatePipeRequest'
-      responses:
-        '200':
-          description: The created Pipe.
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    status:
+                      type: string
+                      enum:
+                      - private
+                      - public
+                    model:
+                      type: string
+                    stream:
+                      type: boolean
+                    json:
+                      type: boolean
+                    store:
+                      type: boolean
+                    moderate:
+                      type: boolean
+                    top_p:
+                      type: number
+                    max_tokens:
+                      type: number
+                    temperature:
+                      type: number
+                    presence_penalty:
+                      type: number
+                    frequency_penalty:
+                      type: number
+                    stop:
+                      type: array
+                      items:
+                        type: string
+                    tool_choice:
+                      anyOf:
+                      - type: string
+                        enum:
+                        - auto
+                        - required
+                      - type: object
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                            - function
+                            default: function
+                          function:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                            required:
+                            - name
+                        required:
+                        - function
+                    parallel_tool_calls:
+                      type: boolean
+                    messages:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          role:
+                            type: string
+                            enum:
+                            - user
+                            - system
+                            - tool
+                            - assistant
+                          content:
+                            type: string
+                        required:
+                        - id
+                        - role
+                        - content
+                    variables:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          value:
+                            type: string
+                        required:
+                        - name
+                        - value
+                    tools:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                            - function
+                            default: function
+                          function:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                              description:
+                                type: string
+                              parameters:
+                                type: object
+                                additionalProperties: {}
+                            required:
+                            - name
+                        required:
+                        - function
+                    memory:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                        required:
+                        - name
+                  required:
+                  - name
+                  - description
+                  - status
+                  - model
+                  - stream
+                  - json
+                  - store
+                  - moderate
+                  - top_p
+                  - max_tokens
+                  - temperature
+                  - presence_penalty
+                  - frequency_penalty
+                  - stop
+                  - parallel_tool_calls
+                  - messages
+                  - variables
+                  - tools
+                  - memory
+        '400':
+          description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pipe'
-  /v1/pipes/{name}:
-    post:
-      operationId: updatePipe
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      status:
+                        type: string
+                      message:
+                        type: string
+                      docs:
+                        type: string
+                    required:
+                    - code
+                    - status
+                    - message
+                    - docs
+                required:
+                - success
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+                  code:
+                    type: string
+                required:
+                - success
+                - error
+                - code
       tags:
       - Pipes
-      summary: Update a Pipe
+      summary: V1 pipes list
+      x-summary-source: derived
+  /v1/pipes/{pipeName}:
+    post:
+      operationId: v1PipeUpdate
+      security:
+      - bearerAuth: []
       parameters:
-      - in: path
-        name: name
-        required: true
-        schema:
+      - schema:
           type: string
-        description: The name of the Pipe to update.
+        required: true
+        name: pipeName
+        in: path
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreatePipeRequest'
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                status:
+                  type: string
+                  enum:
+                  - private
+                  - public
+                regenerateApiKey:
+                  type: boolean
+                  default: false
+                model:
+                  type: string
+                stream:
+                  type: boolean
+                json:
+                  type: boolean
+                store:
+                  type: boolean
+                moderate:
+                  type: boolean
+                top_p:
+                  type: number
+                max_tokens:
+                  type: number
+                temperature:
+                  type: number
+                presence_penalty:
+                  type: number
+                frequency_penalty:
+                  type: number
+                stop:
+                  type: array
+                  items:
+                    type: string
+                tool_choice:
+                  anyOf:
+                  - type: string
+                    enum:
+                    - auto
+                    - required
+                  - type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - function
+                        default: function
+                      function:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                        required:
+                        - name
+                    required:
+                    - function
+                parallel_tool_calls:
+                  type: boolean
+                messages:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      role:
+                        type: string
+                        enum:
+                        - user
+                        - system
+                        - function
+                        - assistant
+                      name:
+                        type: string
+                      content:
+                        type: string
+                    required:
+                    - role
+                    - content
+                variables:
+                  anyOf:
+                  - type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          minLength: 1
+                        value:
+                          type: string
+                          minLength: 1
+                      required:
+                      - name
+                      - value
+                  - type: object
+                    additionalProperties:
+                      type: string
+                      minLength: 1
+                tools:
+                  anyOf:
+                  - type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                          - function
+                          default: function
+                        function:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            description:
+                              type: string
+                            parameters:
+                              type: object
+                              additionalProperties: {}
+                          required:
+                          - name
+                      required:
+                      - function
+                  - type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        description:
+                          type: string
+                        parameters:
+                          type: object
+                          additionalProperties: {}
+                      required:
+                      - name
+                memory:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        minLength: 1
+                    required:
+                    - name
       responses:
         '200':
-          description: The updated Pipe.
+          description: 'Langbase: Update pipe v1'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pipe'
+                type: object
+                properties:
+                  name:
+                    type: string
+                  owner_login:
+                    type: string
+                  status:
+                    type: string
+                    enum:
+                    - private
+                    - public
+                  description:
+                    type: string
+                  type:
+                    type: string
+                    enum:
+                    - chat
+                    - generate
+                    default: generate
+                  api_key:
+                    type: string
+                  url:
+                    type: string
+                required:
+                - name
+                - owner_login
+                - status
+                - api_key
+                - url
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      status:
+                        type: string
+                      message:
+                        type: string
+                      docs:
+                        type: string
+                    required:
+                    - code
+                    - status
+                    - message
+                    - docs
+                required:
+                - success
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+                  code:
+                    type: string
+                required:
+                - success
+                - error
+                - code
+      tags:
+      - Pipes
+      summary: V1 pipe update
+      x-summary-source: derived
+  /v1/pipes/{ownerLogin}/{pipeName}:
+    get:
+      operationId: v1PipeSingle
+      security:
+      - bearerAuth: []
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+        required: true
+        name: ownerLogin
+        in: path
+      - schema:
+          type: string
+          minLength: 1
+        required: true
+        name: pipeName
+        in: path
+      responses:
+        '200':
+          description: 'Langbase: Single pipe v1'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  status:
+                    type: string
+                    enum:
+                    - private
+                    - public
+                  model:
+                    type: string
+                  stream:
+                    type: boolean
+                  json:
+                    type: boolean
+                  store:
+                    type: boolean
+                  moderate:
+                    type: boolean
+                  top_p:
+                    type: number
+                  max_tokens:
+                    type: number
+                  temperature:
+                    type: number
+                  presence_penalty:
+                    type: number
+                  frequency_penalty:
+                    type: number
+                  stop:
+                    type: array
+                    items:
+                      type: string
+                  tool_choice:
+                    anyOf:
+                    - type: string
+                      enum:
+                      - auto
+                      - required
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                          - function
+                          default: function
+                        function:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                          required:
+                          - name
+                      required:
+                      - function
+                  parallel_tool_calls:
+                    type: boolean
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        role:
+                          type: string
+                          enum:
+                          - user
+                          - system
+                          - tool
+                          - assistant
+                        content:
+                          type: string
+                      required:
+                      - id
+                      - role
+                      - content
+                  variables:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        value:
+                          type: string
+                      required:
+                      - name
+                      - value
+                  tools:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                          - function
+                          default: function
+                        function:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            description:
+                              type: string
+                            parameters:
+                              type: object
+                              additionalProperties: {}
+                          required:
+                          - name
+                      required:
+                      - function
+                  memory:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                      required:
+                      - name
+                required:
+                - name
+                - description
+                - status
+                - model
+                - stream
+                - json
+                - store
+                - moderate
+                - top_p
+                - max_tokens
+                - temperature
+                - presence_penalty
+                - frequency_penalty
+                - stop
+                - parallel_tool_calls
+                - messages
+                - variables
+                - tools
+                - memory
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      status:
+                        type: string
+                      message:
+                        type: string
+                      docs:
+                        type: string
+                    required:
+                    - code
+                    - status
+                    - message
+                    - docs
+                required:
+                - success
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+                  code:
+                    type: string
+                required:
+                - success
+                - error
+                - code
+      tags:
+      - Pipes
+      summary: V1 pipe single
+      x-summary-source: derived
 components:
-  schemas:
-    Message:
-      type: object
-      properties:
-        role:
-          type: string
-          enum:
-          - system
-          - user
-          - assistant
-          - tool
-        content:
-          type: string
-        name:
-          type: string
-      required:
-      - role
-    CreatePipeRequest:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        status:
-          type: string
-          enum:
-          - public
-          - private
-        model:
-          type: string
-        messages:
-          type: array
-          items:
-            $ref: '#/components/schemas/Message'
-        tools:
-          type: array
-          items:
-            type: object
-        memory:
-          type: array
-          items:
-            type: object
-      required:
-      - name
-    Pipe:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        status:
-          type: string
-          enum:
-          - public
-          - private
-        model:
-          type: string
-        apiKey:
-          type: string
-          description: The run key scoped to this Pipe.
-    RunResponse:
-      type: object
-      properties:
-        completion:
-          type: string
-          description: The generated text completion.
-        raw:
-          type: object
-          description: The raw upstream provider response.
-        usage:
-          $ref: '#/components/schemas/Usage'
-    Usage:
-      type: object
-      properties:
-        prompt_tokens:
-          type: integer
-        completion_tokens:
-          type: integer
-        total_tokens:
-          type: integer
-    RunPipeRequest:
-      type: object
-      properties:
-        messages:
-          type: array
-          items:
-            $ref: '#/components/schemas/Message'
-        variables:
-          type: object
-          additionalProperties:
-            type: string
-          description: Dynamic variables for adaptable prompts.
-        threadId:
-          type: string
-          description: Continue an existing conversation thread.
-        stream:
-          type: boolean
-          default: false
-          description: When true, responses are streamed as Server-Sent Events.
-        tools:
-          type: array
-          items:
-            type: object
-        memory:
-          type: array
-          items:
-            type: object
-          description: Memory objects to override the Pipe defaults.
-      required:
-      - messages
   securitySchemes:
-    api_key:
+    bearerAuth:
+      bearerFormat: Langbase-API-Key
       type: http
       scheme: bearer
-      bearerFormat: apiKey
+      description: 'Enter your Langbase API key with format: Bearer Langbase-API-Key'

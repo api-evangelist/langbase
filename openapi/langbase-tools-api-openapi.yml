@@ -1,107 +1,222 @@
 openapi: 3.2.0
 info:
   title: Langbase Tools API
-  description: Representative OpenAPI description of the Langbase serverless AI developer platform. All endpoints are served from https://api.langbase.com and authenticated with a Bearer API key. Generative endpoints (Pipes run, Agent run) return Server-Sent Events (SSE) when `stream` is true. This document is a faithful representative model authored by API Evangelist and is not the provider's official specification.
-  termsOfService: https://langbase.com/terms
-  contact:
-    name: Langbase Support
-    url: https://langbase.com/support
-  version: '1.0'
+  version: 1.0.0
 servers:
 - url: https://api.langbase.com
-  description: Langbase production API
-security:
-- api_key: []
+  description: Production
 tags:
 - name: Tools
 paths:
   /v1/tools/web-search:
     post:
-      operationId: webSearch
-      tags:
-      - Tools
-      summary: Run a live web search
+      operationId: v1ToolWebSearch
+      security:
+      - bearerAuth: []
+      parameters:
+      - schema:
+          type: string
+        required: true
+        name: lb-web-search-key
+        in: header
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/WebSearchRequest'
+              type: object
+              properties:
+                query:
+                  type: string
+                service:
+                  type: string
+                  enum:
+                  - exa
+                totalResults:
+                  type: number
+                  maximum: 10
+                  default: 3
+                domains:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 3
+                  default: []
+              required:
+              - query
+              - service
       responses:
         '200':
-          description: An array of search results.
+          description: 'Langbase: Web search tool v1'
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/WebSearchResult'
+                  type: object
+                  properties:
+                    url:
+                      type: string
+                    content:
+                      type: string
+                  required:
+                  - url
+                  - content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      status:
+                        type: string
+                      message:
+                        type: string
+                      docs:
+                        type: string
+                    required:
+                    - code
+                    - status
+                    - message
+                    - docs
+                required:
+                - success
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+                  code:
+                    type: string
+                required:
+                - success
+                - error
+                - code
+      tags:
+      - Tools
+      summary: V1 tool web search
+      x-summary-source: derived
   /v1/tools/crawl:
     post:
-      operationId: crawl
-      tags:
-      - Tools
-      summary: Crawl and extract content from web pages
+      operationId: v1ToolCrawl
+      security:
+      - bearerAuth: []
+      parameters:
+      - schema:
+          type: string
+        required: true
+        name: LB-CRAWL-KEY
+        in: header
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CrawlRequest'
+              type: object
+              properties:
+                url:
+                  type: array
+                  items:
+                    type: string
+                    minLength: 1
+                maxPages:
+                  type: number
+                  minimum: 0
+                  maximum: 10
+                  default: 1
+                service:
+                  type: string
+                  enum:
+                  - spider
+                  - firecrawl
+                  default: spider
+              required:
+              - url
       responses:
         '200':
-          description: An array of crawled page contents.
+          description: 'Langbase: Crawler tool'
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/WebSearchResult'
+                  type: object
+                  properties:
+                    url:
+                      type: string
+                    content:
+                      type: string
+                  required:
+                  - url
+                  - content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      status:
+                        type: string
+                      message:
+                        type: string
+                      docs:
+                        type: string
+                    required:
+                    - code
+                    - status
+                    - message
+                    - docs
+                required:
+                - success
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+                  code:
+                    type: string
+                required:
+                - success
+                - error
+                - code
+      tags:
+      - Tools
+      summary: V1 tool crawl
+      x-summary-source: derived
 components:
-  schemas:
-    WebSearchResult:
-      type: object
-      properties:
-        url:
-          type: string
-        content:
-          type: string
-    CrawlRequest:
-      type: object
-      properties:
-        url:
-          type: array
-          items:
-            type: string
-        service:
-          type: string
-          enum:
-          - spider
-        maxPages:
-          type: integer
-      required:
-      - url
-      - service
-    WebSearchRequest:
-      type: object
-      properties:
-        query:
-          type: string
-        service:
-          type: string
-          enum:
-          - exa
-        totalResults:
-          type: integer
-        domains:
-          type: array
-          items:
-            type: string
-      required:
-      - query
-      - service
   securitySchemes:
-    api_key:
+    bearerAuth:
+      bearerFormat: Langbase-API-Key
       type: http
       scheme: bearer
-      bearerFormat: apiKey
+      description: 'Enter your Langbase API key with format: Bearer Langbase-API-Key'

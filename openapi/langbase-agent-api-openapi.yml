@@ -1,122 +1,219 @@
 openapi: 3.2.0
 info:
   title: Langbase Agent API
-  description: Representative OpenAPI description of the Langbase serverless AI developer platform. All endpoints are served from https://api.langbase.com and authenticated with a Bearer API key. Generative endpoints (Pipes run, Agent run) return Server-Sent Events (SSE) when `stream` is true. This document is a faithful representative model authored by API Evangelist and is not the provider's official specification.
-  termsOfService: https://langbase.com/terms
-  contact:
-    name: Langbase Support
-    url: https://langbase.com/support
-  version: '1.0'
+  version: 1.0.0
 servers:
 - url: https://api.langbase.com
-  description: Langbase production API
-security:
-- api_key: []
+  description: Production
 tags:
 - name: Agent
 paths:
   /v1/agent/run:
     post:
-      operationId: runAgent
-      tags:
-      - Agent
-      summary: Run an agent against any of 100+ LLMs
-      description: Runs a prompt against a model specified as `provider:model_id` (for example `openai:gpt-4o-mini`). Supports tools, generation controls, and SSE streaming when `stream` is true. A bring-your-own LLM provider key may be supplied via the `LB-LLM-Key` header.
-      parameters:
-      - in: header
-        name: LB-LLM-Key
-        required: false
-        schema:
-          type: string
-        description: Optional LLM provider API key for bring-your-own-key runs.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RunAgentRequest'
+      operationId: v1AgentRun
+      security:
+      - bearerAuth: []
       responses:
         '200':
-          description: An agent run response, or an SSE stream when stream is true.
+          description: 'Langbase: Agent Run'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RunResponse'
-            text/event-stream:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  completion:
+                    type: string
+                  raw:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      object:
+                        type: string
+                      created:
+                        type: number
+                      model:
+                        type: string
+                      provider:
+                        type: string
+                      choices:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            index:
+                              type: number
+                            message:
+                              type: object
+                              properties:
+                                role:
+                                  type: string
+                                  enum:
+                                  - user
+                                  - system
+                                  - tool
+                                  - assistant
+                                content:
+                                  type:
+                                  - string
+                                  - 'null'
+                                refusal:
+                                  type:
+                                  - string
+                                  - 'null'
+                                annotations:
+                                  type: array
+                                  items: {}
+                                tool_calls:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      id:
+                                        type: string
+                                      type:
+                                        type: string
+                                        enum:
+                                        - function
+                                      function:
+                                        type: object
+                                        properties:
+                                          name:
+                                            type: string
+                                          arguments:
+                                            type: string
+                                        required:
+                                        - name
+                                    required:
+                                    - id
+                                    - type
+                                    - function
+                              required:
+                              - role
+                              - content
+                              - tool_calls
+                            logprobs:
+                              type:
+                              - string
+                              - 'null'
+                            finish_reason:
+                              type: string
+                          required:
+                          - index
+                          - message
+                      usage:
+                        type: object
+                        properties:
+                          prompt_tokens:
+                            type: number
+                          completion_tokens:
+                            type: number
+                          total_tokens:
+                            type: number
+                          prompt_tokens_details:
+                            type: object
+                            properties:
+                              cached_tokens:
+                                type: number
+                              audio_tokens:
+                                type: number
+                            required:
+                            - cached_tokens
+                            - audio_tokens
+                          completion_tokens_details:
+                            type: object
+                            properties:
+                              reasoning_tokens:
+                                type: number
+                              audio_tokens:
+                                type: number
+                              accepted_prediction_tokens:
+                                type: number
+                              rejected_prediction_tokens:
+                                type: number
+                            required:
+                            - reasoning_tokens
+                            - audio_tokens
+                            - accepted_prediction_tokens
+                            - rejected_prediction_tokens
+                        required:
+                        - prompt_tokens
+                        - completion_tokens
+                        - total_tokens
+                      service_tier:
+                        type: string
+                      system_fingerprint:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - id
+                    - object
+                    - created
+                    - model
+                    - choices
+                    - usage
+                required:
+                - completion
+                - raw
+            application/octet-stream:
               schema:
                 type: string
-                description: Server-Sent Events stream of completion chunks.
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      status:
+                        type: string
+                      message:
+                        type: string
+                      docs:
+                        type: string
+                    required:
+                    - code
+                    - status
+                    - message
+                    - docs
+                required:
+                - success
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+                  code:
+                    type: string
+                required:
+                - success
+                - error
+                - code
+      tags:
+      - Agent
+      summary: V1 agent run
+      x-summary-source: derived
 components:
-  schemas:
-    RunResponse:
-      type: object
-      properties:
-        completion:
-          type: string
-          description: The generated text completion.
-        raw:
-          type: object
-          description: The raw upstream provider response.
-        usage:
-          $ref: '#/components/schemas/Usage'
-    Usage:
-      type: object
-      properties:
-        prompt_tokens:
-          type: integer
-        completion_tokens:
-          type: integer
-        total_tokens:
-          type: integer
-    RunAgentRequest:
-      type: object
-      properties:
-        model:
-          type: string
-          description: Model as provider:model_id, e.g. openai:gpt-4o-mini.
-          example: openai:gpt-4o-mini
-        input:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              $ref: '#/components/schemas/Message'
-        instructions:
-          type: string
-        stream:
-          type: boolean
-          default: false
-        tools:
-          type: array
-          items:
-            type: object
-        temperature:
-          type: number
-        top_p:
-          type: number
-        max_tokens:
-          type: integer
-      required:
-      - model
-      - input
-    Message:
-      type: object
-      properties:
-        role:
-          type: string
-          enum:
-          - system
-          - user
-          - assistant
-          - tool
-        content:
-          type: string
-        name:
-          type: string
-      required:
-      - role
   securitySchemes:
-    api_key:
+    bearerAuth:
+      bearerFormat: Langbase-API-Key
       type: http
       scheme: bearer
-      bearerFormat: apiKey
+      description: 'Enter your Langbase API key with format: Bearer Langbase-API-Key'

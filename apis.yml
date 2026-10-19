@@ -405,6 +405,76 @@ apis:
     url: https://langbase.com/docs/api-reference/embed
   - type: Documentation
     url: https://langbase.com/docs/workflows
+- aid: langbase:langbase-beta-api
+  name: Langbase Beta API
+  description: The Beta API from Langbase — 15 operation(s) for beta.
+  humanURL: https://langbase.com/docs/api-reference/pipe
+  baseURL: https://api.langbase.com/v1
+  tags:
+  - Beta
+  properties:
+  - type: OpenAPI
+    url: openapi/langbase-beta-api-openapi.yml
+- aid: langbase:langbase-health-api
+  name: Langbase Health API
+  description: The Health API from Langbase — 1 operation(s) for health.
+  humanURL: https://langbase.com/docs/api-reference/pipe
+  baseURL: https://api.langbase.com/v1
+  tags:
+  - Health
+  properties:
+  - type: OpenAPI
+    url: openapi/langbase-health-api-openapi.yml
+- aid: langbase:langbase-images-api
+  name: Langbase Images API
+  description: The Images API from Langbase — 1 operation(s) for images.
+  humanURL: https://langbase.com/docs/api-reference/pipe
+  baseURL: https://api.langbase.com/v1
+  tags:
+  - Images
+  properties:
+  - type: OpenAPI
+    url: openapi/langbase-images-api-openapi.yml
+- aid: langbase:langbase-langbase-api-api
+  name: Langbase Langbase API
+  description: The Langbase Api API from Langbase — 2 operation(s) for langbase api.
+  humanURL: https://langbase.com/docs/api-reference/pipe
+  baseURL: https://api.langbase.com/v1
+  tags:
+  - Langbase Api
+  properties:
+  - type: OpenAPI
+    url: openapi/langbase-langbase-api-api-openapi.yml
+- aid: langbase:langbase-models-api
+  name: Langbase Models API
+  description: The Models API from Langbase — 1 operation(s) for models.
+  humanURL: https://langbase.com/docs/api-reference/pipe
+  baseURL: https://api.langbase.com/v1
+  tags:
+  - Models
+  properties:
+  - type: OpenAPI
+    url: openapi/langbase-models-api-openapi.yml
+- aid: langbase:langbase-routes-api
+  name: Langbase Routes API
+  description: The Routes API from Langbase — 1 operation(s) for routes.
+  humanURL: https://langbase.com/docs/api-reference/pipe
+  baseURL: https://api.langbase.com/v1
+  tags:
+  - Routes
+  properties:
+  - type: OpenAPI
+    url: openapi/langbase-routes-api-openapi.yml
+- aid: langbase:langbase-traces-api
+  name: Langbase Traces API
+  description: The Traces API from Langbase — 2 operation(s) for traces.
+  humanURL: https://langbase.com/docs/api-reference/pipe
+  baseURL: https://api.langbase.com/v1
+  tags:
+  - Traces
+  properties:
+  - type: OpenAPI
+    url: openapi/langbase-traces-api-openapi.yml
 common:
 - type: Pricing
   url: https://langbase.com/pricing

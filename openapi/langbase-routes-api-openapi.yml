@@ -1,0 +1,98 @@
+openapi: 3.2.0
+info:
+  title: Langbase Routes API
+  version: 1.0.0
+servers:
+- url: https://api.langbase.com
+  description: Production
+tags:
+- name: Routes
+paths:
+  /routes:
+    get:
+      operationId: routes
+      responses:
+        '200':
+          description: 'Langbase API: List of unique routes'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    description: A message listing available routes.
+                  routes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        method:
+                          type: string
+                        path:
+                          type: string
+                      required:
+                      - method
+                      - path
+                required:
+                - success
+                - message
+                - routes
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      status:
+                        type: string
+                      message:
+                        type: string
+                      docs:
+                        type: string
+                    required:
+                    - code
+                    - status
+                    - message
+                    - docs
+                required:
+                - success
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+                  code:
+                    type: string
+                required:
+                - success
+                - error
+                - code
+      tags:
+      - Routes
+      summary: Routes
+      x-summary-source: derived
+components:
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: Langbase-API-Key
+      type: http
+      scheme: bearer
+      description: 'Enter your Langbase API key with format: Bearer Langbase-API-Key'

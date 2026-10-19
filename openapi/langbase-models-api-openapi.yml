@@ -1,0 +1,117 @@
+openapi: 3.2.0
+info:
+  title: Langbase Models API
+  version: 1.0.0
+servers:
+- url: https://api.langbase.com
+  description: Production
+tags:
+- name: Models
+paths:
+  /v1/models:
+    get:
+      operationId: getModels
+      responses:
+        '200':
+          description: List of Text & Image Models by Provider
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Unique model identifier with provider prefix
+                      provider:
+                        type: string
+                        description: Name of the LLM provider
+                      type:
+                        type: string
+                        enum:
+                        - text
+                        - image
+                        description: Model type
+                      promptCost:
+                        type: number
+                        description: Cost per million tokens in USD for prompts (text models)
+                      completionCost:
+                        type: number
+                        description: Cost per million tokens in USD for completions (text models)
+                      basePrice:
+                        type: number
+                        description: Base price per image generation (image models)
+                      supportedSizes:
+                        type: array
+                        items:
+                          type: string
+                        description: Supported image sizes (image models)
+                      supportedQualities:
+                        type: array
+                        items:
+                          type: string
+                        description: Supported image qualities (image models)
+                    required:
+                    - id
+                    - provider
+                    - type
+                description: Map of provider names to their available models
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      status:
+                        type: string
+                      message:
+                        type: string
+                      docs:
+                        type: string
+                    required:
+                    - code
+                    - status
+                    - message
+                    - docs
+                required:
+                - success
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+                  code:
+                    type: string
+                required:
+                - success
+                - error
+                - code
+      tags:
+      - Models
+      summary: Get models
+      x-summary-source: derived
+components:
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: Langbase-API-Key
+      type: http
+      scheme: bearer
+      description: 'Enter your Langbase API key with format: Bearer Langbase-API-Key'
