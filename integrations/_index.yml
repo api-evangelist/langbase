@@ -29,3 +29,27 @@
     builder: Pipedream repo (component)
   status: not-a-workflow
   arazzo: null
+- slug: langbase-claude-plugins-dev
+  label: claude-plugins.dev
+  partner_name: claude-plugins.dev
+  category: Agent Skills register
+  type: register
+  channel: standard-directory
+  evidence: https://claude-plugins.dev/skills/@langbaseinc/agent-skills
+  source: edge
+  relationship: compatible
+  contract_reference:
+    register: claude-plugins.dev (public sitemap / list)
+    spec_file: null
+    standard: Agent Skills (agentskills.io)
+    role: agent-skills-listing
+    matched_org: langbaseinc
+    matched_by: org-profile-domain:langbase.com
+    sample_skills:
+    - aws-cdk-development
+    - aws-cost-operations
+    - building-mcp-server-on-cloudflare
+    detected_by: sweep-agent-skills.py
+    detected: '2026-10-20'
+  status: not-a-workflow
+  arazzo: null
