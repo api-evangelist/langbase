@@ -87,3 +87,9 @@ components:
       type: http
       scheme: bearer
       description: 'Enter your Langbase API key with format: Bearer Langbase-API-Key'
+x-provenance:
+  method: harvested
+  publisher: Langbase
+  source: https://api.langbase.com/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
