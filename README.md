@@ -1,4 +1,4 @@
-# Langbase (langbase)
+# Langbase
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,222 +66,132 @@
 
 Langbase is a serverless AI developer platform for building, deploying, and scaling AI agents and applications. Its composable primitives - Pipes (agents), Memory (managed RAG), Threads, Agent (one API over 100+ LLMs), Tools, Parser, Chunker, and Embed - are exposed through a single Bearer-authenticated REST API at api.langbase.com, with Server-Sent Events (SSE) streaming for generative endpoints.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/langbase/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/langbase/refs/heads/main/apis.yml)
+**Areas:** Artificial Intelligence · Agents · RAG · LLM · Serverless
 
-## Tags
+## Langbase on APIs.io
 
-- AI
-- Agents
-- RAG
-- LLM
-- Serverless
+Everything profiled for Langbase is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/langbase/](https://apis.io/providers/langbase/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### APIs (8)
 
-- **Created:** 2026-07-01
-- **Modified:** 2026-07-01
+- [Langbase Agent API](https://apis.io/apis/langbase/langbase-agent-api/) — The Agent API from Langbase — 1 operation(s) for agent.
+- [Langbase Chunker API](https://apis.io/apis/langbase/langbase-chunker-api/) — The Chunker API from Langbase — 1 operation(s) for chunker.
+- [Langbase Embed API](https://apis.io/apis/langbase/langbase-embed-api/) — The Embed API from Langbase — 1 operation(s) for embed.
+- [Langbase Memory API](https://apis.io/apis/langbase/langbase-memory-api/) — The Memory API from Langbase — 5 operation(s) for memory.
+- [Langbase Parser API](https://apis.io/apis/langbase/langbase-parser-api/) — The Parser API from Langbase — 1 operation(s) for parser.
+- [Langbase Pipes API](https://apis.io/apis/langbase/langbase-pipes-api/) — The Pipes API from Langbase — 3 operation(s) for pipes.
+- [Langbase Threads API](https://apis.io/apis/langbase/langbase-threads-api/) — The Threads API from Langbase — 3 operation(s) for threads.
+- [Langbase Tools API](https://apis.io/apis/langbase/langbase-tools-api/) — The Tools API from Langbase — 2 operation(s) for tools.
 
-## APIs
+### Published properties
 
-### Langbase Pipes API
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-Run, create, update, and list Pipes - composable, deployable AI agents with a system prompt, model, tools, variables, and memory. POST /v1/pipes/run executes a Pipe over a message array and streams token deltas as Server-Sent Events when stream is true.
+#### Agentic access (1)
 
-- **Human URL:** [https://langbase.com/docs/api-reference/pipe](https://langbase.com/docs/api-reference/pipe)
-- **Base URL:** `https://api.langbase.com/v1`
+Which operations an agent can call, which act, and which need a human in the loop.
 
-#### Tags
+- [Langbase Agentic Access](https://apis.io/agentic-access/langbase/langbase-agentic-access/)
 
-- Pipes
-- Agents
-- Completions
+#### Collections (9)
 
-#### Properties
+Postman and Open Collection request collections.
 
-- [Documentation](https://langbase.com/docs/pipe)
-- [API Reference](https://langbase.com/docs/api-reference/pipe)
-- [OpenAPI](openapi/langbase-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langbase.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langbase.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [Langbase API](https://apis.io/collections/langbase/open-langbase/)
+- [Langbase Agent API](https://apis.io/collections/langbase/open-langbase-agent-api/)
+- [Langbase Agent Chunker API](https://apis.io/collections/langbase/open-langbase-chunker-api/)
+- [Langbase Agent Embed API](https://apis.io/collections/langbase/open-langbase-embed-api/)
+- [Langbase Agent Memory API](https://apis.io/collections/langbase/open-langbase-memory-api/)
+- [Langbase Agent Parser API](https://apis.io/collections/langbase/open-langbase-parser-api/)
+- [Langbase Agent Pipes API](https://apis.io/collections/langbase/open-langbase-pipes-api/)
+- [Langbase Agent Threads API](https://apis.io/collections/langbase/open-langbase-threads-api/)
+- [Langbase Agent Tools API](https://apis.io/collections/langbase/open-langbase-tools-api/)
 
-### Langbase Agent API
+#### Security (3)
 
-A single liquid AI mesh endpoint (POST /v1/agent/run) that runs a prompt against 100+ LLMs from all top providers using a provider:model_id string, with tools, generation controls, and SSE streaming. Bring-your-own LLM keys are supported via the LB-LLM-Key header.
+Authentication, trust centre, and vulnerability disclosure.
 
-- **Human URL:** [https://langbase.com/docs/api-reference/agent](https://langbase.com/docs/api-reference/agent)
-- **Base URL:** `https://api.langbase.com/v1`
+- [Langbase Authentication](https://apis.io/security/langbase/langbase-authentication/)
+- [Langbase Domain Security](https://apis.io/security/langbase/langbase-domain-security/)
+- [Langbase Vulnerability Disclosure](https://apis.io/security/langbase/langbase-vulnerability-disclosure/)
 
-#### Tags
+#### Plans and pricing (1)
 
-- Agent
-- LLM
-- Multi-Provider
+Published plans, tiers and prices.
 
-#### Properties
+- [Langbase Plans Pricing](https://apis.io/plans/langbase/langbase-plans-pricing/)
 
-- [Documentation](https://langbase.com/docs/agent)
-- [API Reference](https://langbase.com/docs/api-reference/agent)
-- [OpenAPI](openapi/langbase-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langbase.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langbase.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+#### Rate limits (1)
 
-### Langbase Memory API
+Published request limits.
 
-Managed, serverless RAG. Create and list memory stores, upload and manage documents, and retrieve semantically similar chunks (POST /v1/memory/retrieve) with a topK control and metadata filters, without running your own vector database or embedding pipeline.
+- [Langbase Rate Limits](https://apis.io/rate-limits/langbase/langbase-rate-limits/)
 
-- **Human URL:** [https://langbase.com/docs/api-reference/memory](https://langbase.com/docs/api-reference/memory)
-- **Base URL:** `https://api.langbase.com/v1`
+#### FinOps (1)
 
-#### Tags
+What the API costs to run, by operation.
 
-- Memory
-- RAG
-- Vector Store
+- [Langbase Finops](https://apis.io/finops/langbase/langbase-finops/)
 
-#### Properties
+## Where to find this API
 
-- [Documentation](https://langbase.com/docs/memory)
-- [API Reference](https://langbase.com/docs/api-reference/memory)
-- [OpenAPI](openapi/langbase-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langbase.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langbase.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
-### Langbase Threads API
-
-Persist and manage conversation state. Create, get, update, and delete threads, and append or list messages, so multi-turn agent conversations keep their history server-side and can be resumed via a thread identifier.
-
-- **Human URL:** [https://langbase.com/docs/api-reference/threads](https://langbase.com/docs/api-reference/threads)
-- **Base URL:** `https://api.langbase.com/v1`
-
-#### Tags
-
-- Threads
-- Conversation
-- State
-
-#### Properties
-
-- [Documentation](https://langbase.com/docs/threads)
-- [API Reference](https://langbase.com/docs/api-reference/threads)
-- [OpenAPI](openapi/langbase-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langbase.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langbase.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Langbase Tools API
-
-Managed agent tools. POST /v1/tools/web-search runs a live web search (via providers such as Exa) returning URLs and extracted content, and POST /v1/tools/crawl fetches and extracts content from one or more web pages for agents to ground on.
-
-- **Human URL:** [https://langbase.com/docs/api-reference/tools](https://langbase.com/docs/api-reference/tools)
-- **Base URL:** `https://api.langbase.com/v1`
-
-#### Tags
-
-- Tools
-- Web Search
-- Crawl
-
-#### Properties
-
-- [Documentation](https://langbase.com/docs/tools)
-- [API Reference](https://langbase.com/docs/api-reference/tools)
-- [OpenAPI](openapi/langbase-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langbase.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langbase.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Langbase Parser API
-
-Extract clean text from uploaded documents (PDF, CSV, XLSX, XLS, and more, up to 10 MB) via a multipart POST /v1/parser, as the ingestion front door for RAG and content pipelines.
-
-- **Human URL:** [https://langbase.com/docs/api-reference/parser](https://langbase.com/docs/api-reference/parser)
-- **Base URL:** `https://api.langbase.com/v1`
-
-#### Tags
-
-- Parser
-- Documents
-- Extraction
-
-#### Properties
-
-- [Documentation](https://langbase.com/docs/parser)
-- [API Reference](https://langbase.com/docs/api-reference/parser)
-- [OpenAPI](openapi/langbase-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langbase.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langbase.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Langbase Chunker API
-
-Split large text into overlapping, retrieval-ready chunks (POST /v1/chunker) with configurable chunkMaxLength and chunkOverlap, for building RAG and search indexes.
-
-- **Human URL:** [https://langbase.com/docs/api-reference/chunker](https://langbase.com/docs/api-reference/chunker)
-- **Base URL:** `https://api.langbase.com/v1`
-
-#### Tags
-
-- Chunker
-- RAG
-- Preprocessing
-
-#### Properties
-
-- [Documentation](https://langbase.com/docs/chunker)
-- [API Reference](https://langbase.com/docs/api-reference/chunker)
-- [OpenAPI](openapi/langbase-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langbase.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langbase.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Langbase Embed API
-
-Generate embedding vectors for up to 100 text chunks per request (POST /v1/embed) using OpenAI, Cohere, or Google embedding models, defaulting to openai:text-embedding-3-large.
-
-- **Human URL:** [https://langbase.com/docs/api-reference/embed](https://langbase.com/docs/api-reference/embed)
-- **Base URL:** `https://api.langbase.com/v1`
-
-#### Tags
-
-- Embeddings
-- Vectors
-- RAG
-
-#### Properties
-
-- [Documentation](https://langbase.com/docs/embed)
-- [API Reference](https://langbase.com/docs/api-reference/embed)
-- [OpenAPI](openapi/langbase-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langbase.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langbase.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Langbase Workflows API
-
-Durable, step-based orchestration for composing agents, memory, and tools into multi-step AI workflows with retries and timeouts. Workflows compose the underlying Agent, Pipes, Memory, and Tools API calls into a single reliable execution.
-
-- **Human URL:** [https://langbase.com/docs/workflows](https://langbase.com/docs/workflows)
-- **Base URL:** `https://api.langbase.com/v1`
-
-#### Tags
-
-- Workflows
-- Orchestration
-- Agents
-
-#### Properties
-
-- [Documentation](https://langbase.com/docs/workflows)
-- [OpenAPI](openapi/langbase-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langbase.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langbase.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-## Common Properties
-
-- [GitHub Organization](https://github.com/LangbaseInc)
-- [LinkedIn](https://www.linkedin.com/company/langbase)
 - [Website](https://langbase.com/)
 - [Documentation](https://langbase.com/docs)
-- [Plans](plans/langbase-plans-pricing.yml)
-- [Rate Limits](rate-limits/langbase-rate-limits.yml)
-- [Fin Ops](finops/langbase-finops.yml)
+- [Pricing](https://langbase.com/pricing)
+- [Blog](https://langbase.com/blog)
+- [GitHub](https://github.com/LangbaseInc)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 33.8** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 46.9 |
+| Contract governance | 0.0 |
+| Operational transparency | 10.5 |
+| Developer ergonomics | 31.0 |
+| Access clarity | 42.1 |
+
+**Agent readiness 17.9** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 16.4** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/langbase/](https://apis.io/providers/langbase/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Langbase: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/langbase/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
